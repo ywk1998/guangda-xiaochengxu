@@ -1,0 +1,222 @@
+/* 筛选栏 */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 20rpx;
+  background: #fff;
+  border-bottom: 1rpx solid #eee;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.filter-pill {
+  display: flex;
+  align-items: center;
+  height: 56rpx;
+  padding: 0 16rpx;
+  background: #f0f0f0;
+  border-radius: 28rpx;
+  font-size: 24rpx;
+  color: #666;
+  margin-right: 12rpx;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+.filter-pill.active {
+  background: #ffe6e6;
+  color: #e74c3c;
+}
+
+.filter-pill .arrow {
+  font-size: 20rpx;
+  margin-left: 8rpx;
+}
+
+.filter-pill.reset {
+  color: #999;
+  font-size: 24rpx;
+}
+
+/* 统计栏 */
+.stat-bar {
+  padding: 16rpx 24rpx;
+  background: #fafafa;
+}
+
+.stat-text {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 记录列表 */
+.record-list {
+  box-sizing: border-box;
+  height: calc(100vh - 220rpx);
+  padding: 16rpx 24rpx;
+}
+
+/* 卡片 */
+.record-card {
+  box-sizing: border-box;
+  max-width: 100%;
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.card-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-date {
+  font-size: 26rpx;
+  color: #999;
+  flex-shrink: 0;
+  margin-left: 12rpx;
+}
+
+.card-meta {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-left: 12rpx;
+}
+
+.approval-tag {
+  padding: 8rpx 14rpx;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.approval-tag.pending {
+  background: #fff4d9;
+  color: #f59a23;
+}
+
+.approval-tag.approved {
+  background: #e3f6ec;
+  color: #16a05d;
+}
+
+.approval-tag.rejected {
+  background: #ffe8e8;
+  color: #e54d42;
+}
+
+/* 行 */
+.card-row {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10rpx 0;
+}
+
+.card-row-time {
+  padding-top: 14rpx;
+  margin-top: 6rpx;
+  border-top: 1rpx dashed #eee;
+}
+
+.row-label {
+  font-size: 26rpx;
+  color: #999;
+  width: 220rpx;
+  flex-shrink: 0;
+}
+
+.row-value {
+  min-width: 0;
+  max-width: 420rpx;
+  padding-right: 6rpx;
+  box-sizing: border-box;
+  font-size: 28rpx;
+  color: #333;
+  text-align: right;
+  flex: 1;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
+.row-value.highlight {
+  color: #e74c3c;
+  font-weight: 600;
+}
+
+.row-value.time {
+  font-size: 24rpx;
+  color: #bbb;
+}
+
+.image-block {
+  display: flex;
+  align-items: flex-start;
+  padding: 12rpx 0;
+}
+
+.record-image-list {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.record-image {
+  width: 128rpx;
+  height: 96rpx;
+  border-radius: 8rpx;
+  background: #f3f5f7;
+}
+
+/* 空状态 */
+.empty {
+  text-align: center;
+  padding: 120rpx 0;
+  color: #ccc;
+  font-size: 28rpx;
+}
+
+/* 加载提示 */
+.loading-tip {
+  text-align: center;
+  padding: 30rpx 0;
+  color: #ccc;
+  font-size: 24rpx;
+}
+
+.record-actions {
+  padding-top: 18rpx;
+}
+
+.edit-btn {
+  width: 100%;
+  height: 72rpx;
+  line-height: 72rpx;
+  border-radius: 14rpx;
+  background: #e7f3ff;
+  color: #1a6fc4;
+  font-size: 26rpx;
+  font-weight: 700;
+}

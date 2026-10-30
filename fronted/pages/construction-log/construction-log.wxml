@@ -1,0 +1,447 @@
+<import src="../../templates/approval-selector.wxml" />
+<!-- pages/construction-log/construction-log.wxml -->
+<view class="page-log">
+
+  <!-- 顶部标题 -->
+  <view class="log-header">
+    <text class="log-header-title">施  工  日  志</text>
+    <text class="log-header-sub">每天0:00前交统计员，每月5日前将上月施工日志交统计员</text>
+    <text class="header-record-link" bindtap="goToRecord">查看记录 ></text>
+  </view>
+
+  <!-- ===== 基本信息 ===== -->
+  <view class="section-card">
+    <view class="form-row">
+      <text class="form-label required">项目名称</text>
+      <input class="form-input" placeholder="请输入项目名称" value="{{form.projectName}}" bindinput="onInput" data-field="projectName" adjust-position="{{true}}" />
+    </view>
+    <view class="divider"></view>
+    <view class="form-row">
+      <text class="form-label required">施工路段/桩号</text>
+      <input class="form-input" placeholder="请输入路段或桩号" value="{{form.roadSection}}" bindinput="onInput" data-field="roadSection" adjust-position="{{true}}" />
+    </view>
+    <view class="divider"></view>
+    <view class="form-row">
+      <text class="form-label required">日期</text>
+      <picker mode="date" value="{{form.date}}" bindchange="onDateChange">
+        <view class="picker-val {{form.date ? '' : 'placeholder'}}">
+          {{form.date || '请选择日期'}}
+        </view>
+      </picker>
+    </view>
+    <view class="divider"></view>
+    <view class="form-row">
+      <text class="form-label required">天气</text>
+      <view class="weather-group">
+        <view
+          wx:for="{{weatherOptions}}"
+          wx:key="*this"
+          class="weather-tag {{form.weather === item ? 'active' : ''}}"
+          bindtap="onWeatherTap"
+          data-val="{{item}}"
+        >{{item}}</view>
+      </view>
+    </view>
+    <view class="divider"></view>
+    <view class="form-row">
+      <text class="form-label required">记录人</text>
+      <input class="form-input" placeholder="请输入记录人姓名" value="{{form.recorder}}" bindinput="onInput" data-field="recorder" adjust-position="{{true}}" />
+    </view>
+  </view>
+
+  <!-- ===== 施工内容 ===== -->
+  <view class="section-title-bar">
+    <view class="title-line"></view>
+    <text class="section-title-text">施工内容</text>
+  </view>
+
+  <!-- 水稳层表格 -->
+  <view class="section-card no-pad shuiwen-table">
+    <view class="table-wrap">
+      <scroll-view
+        class="table-scroll"
+        scroll-x
+        show-scrollbar="{{false}}"
+        scroll-left="{{tables.shuiwen.scrollLeft}}"
+        bindscroll="onTableScroll"
+        data-key="shuiwen"
+      >
+        <view class="table-inner inner-wide">
+          <view class="table-header">
+            <text class="th col-sw-type">水稳层</text>
+            <text class="th col-sw-qty">设计数量</text>
+            <text class="th col-layer-thick">设计厚度(cm)</text>
+            <text class="th col-layer-area">施工面积(m²)</text>
+            <text class="th col-layer-avg">平均厚度(cm)</text>
+            <text class="th col-layer-cum">累计完成数量</text>
+          </view>
+          <view wx:for="{{form.shuiwenLayers}}" wx:key="index" class="table-row {{index % 2 === 0 ? 'row-even' : ''}}">
+            <input class="td col-sw-type" placeholder="水稳层" value="{{item.name}}" bindinput="onShuiwenInput" data-idx="{{index}}" data-field="name" disabled />
+            <input class="td col-sw-qty" placeholder="0" value="{{item.designQty}}" bindinput="onShuiwenInput" data-idx="{{index}}" data-field="designQty" adjust-position="{{true}}" />
+            <input class="td col-layer-thick" placeholder="0" value="{{item.designThickness}}" bindinput="onShuiwenInput" data-idx="{{index}}" data-field="designThickness" adjust-position="{{true}}" />
+            <input class="td col-layer-area" placeholder="0" value="{{item.constructArea}}" bindinput="onShuiwenInput" data-idx="{{index}}" data-field="constructArea" adjust-position="{{true}}" />
+            <input class="td col-layer-avg" placeholder="0" value="{{item.avgThickness}}" bindinput="onShuiwenInput" data-idx="{{index}}" data-field="avgThickness" adjust-position="{{true}}" />
+            <input class="td col-layer-cum" placeholder="0" value="{{item.cumQty}}" bindinput="onShuiwenInput" data-idx="{{index}}" data-field="cumQty" adjust-position="{{true}}" />
+          </view>
+        </view>
+      </scroll-view>
+      <!-- 固定右侧操作列 -->
+      <view class="table-fixed-col">
+        <view class="fixed-header"><text class="th">操作</text></view>
+        <view wx:for="{{form.shuiwenLayers}}" wx:key="index" class="fixed-row {{index % 2 === 0 ? 'row-even' : ''}}">
+          <text class="delete-row-btn" catchtap="deleteShuiwen" data-idx="{{index}}">删</text>
+        </view>
+      </view>
+    </view>
+    <view class="table-scrollbar" wx:if="{{tables.shuiwen.scrollable}}">
+      <view
+        class="scrollbar-thumb"
+        style="width:{{tables.shuiwen.thumbWidth}}px;left:{{tables.shuiwen.thumbLeft}}px"
+        bindtouchstart="onThumbTouchStart"
+        bindtouchmove="onThumbTouchMove"
+        data-key="shuiwen"
+      ></view>
+    </view>
+    <view class="add-row-btn" bindtap="addShuiwen">
+      <text class="add-row-icon">+</text>
+      <text class="add-row-text">添加水稳层</text>
+    </view>
+  </view>
+
+  <!-- 结构层表格 -->
+  <view class="section-card no-pad structure-table">
+    <view class="table-wrap">
+      <scroll-view
+        class="table-scroll"
+        scroll-x
+        show-scrollbar="{{false}}"
+        scroll-left="{{tables.structure.scrollLeft}}"
+        bindscroll="onTableScroll"
+        data-key="structure"
+      >
+        <view class="table-inner inner-wide">
+          <view class="table-header">
+            <text class="th col-layer-type">结构层类型</text>
+            <text class="th col-layer-qty">设计数量</text>
+            <text class="th col-layer-thick">设计厚度(cm)</text>
+            <text class="th col-layer-area">施工面积(m²)</text>
+            <text class="th col-layer-avg">平均厚度(cm)</text>
+            <text class="th col-layer-cum">累计完成数量</text>
+          </view>
+          <view wx:for="{{form.structureLayers}}" wx:key="index" class="table-row {{index % 2 === 0 ? 'row-even' : ''}}">
+            <input class="td col-layer-type" placeholder="请输入" value="{{item.type}}" bindinput="onLayerInput" data-idx="{{index}}" data-field="type" adjust-position="{{true}}" />
+            <input class="td col-layer-qty" placeholder="0" value="{{item.designQty}}" bindinput="onLayerInput" data-idx="{{index}}" data-field="designQty" adjust-position="{{true}}" />
+            <input class="td col-layer-thick" placeholder="0" value="{{item.designThickness}}" bindinput="onLayerInput" data-idx="{{index}}" data-field="designThickness" adjust-position="{{true}}" />
+            <input class="td col-layer-area" placeholder="0" value="{{item.constructArea}}" bindinput="onLayerInput" data-idx="{{index}}" data-field="constructArea" adjust-position="{{true}}" />
+            <input class="td col-layer-avg" placeholder="0" value="{{item.avgThickness}}" bindinput="onLayerInput" data-idx="{{index}}" data-field="avgThickness" adjust-position="{{true}}" />
+            <input class="td col-layer-cum" placeholder="0" value="{{item.cumQty}}" bindinput="onLayerInput" data-idx="{{index}}" data-field="cumQty" adjust-position="{{true}}" />
+          </view>
+        </view>
+      </scroll-view>
+      <view class="table-fixed-col">
+        <view class="fixed-header"><text class="th">操作</text></view>
+        <view wx:for="{{form.structureLayers}}" wx:key="index" class="fixed-row {{index % 2 === 0 ? 'row-even' : ''}}">
+          <text class="delete-row-btn" catchtap="deleteLayer" data-idx="{{index}}">删</text>
+        </view>
+      </view>
+    </view>
+    <view class="table-scrollbar" wx:if="{{tables.structure.scrollable}}">
+      <view
+        class="scrollbar-thumb"
+        style="width:{{tables.structure.thumbWidth}}px;left:{{tables.structure.thumbLeft}}px"
+        bindtouchstart="onThumbTouchStart"
+        bindtouchmove="onThumbTouchMove"
+        data-key="structure"
+      ></view>
+    </view>
+    <view class="add-row-btn" bindtap="addLayer">
+      <text class="add-row-icon">+</text>
+      <text class="add-row-text">添加结构层</text>
+    </view>
+  </view>
+
+  <!-- 功能层表格 -->
+  <view class="section-card no-pad func-table">
+    <view class="table-wrap">
+      <scroll-view
+        class="table-scroll"
+        scroll-x
+        show-scrollbar="{{false}}"
+        scroll-left="{{tables.func.scrollLeft}}"
+        bindscroll="onTableScroll"
+        data-key="func"
+      >
+        <view class="table-inner inner-narrow">
+          <view class="table-header">
+            <text class="th col-func-type">功能层类型</text>
+            <text class="th col-func-qty">设计数量</text>
+            <text class="th col-func-area">施工面积(m²)</text>
+            <text class="th col-func-cum">累计完成数量</text>
+          </view>
+          <view wx:for="{{form.funcLayers}}" wx:key="index" class="table-row {{index % 2 === 0 ? 'row-even' : ''}}">
+            <input class="td col-func-type" placeholder="请输入" value="{{item.type}}" bindinput="onFuncLayerInput" data-idx="{{index}}" data-field="type" adjust-position="{{true}}" />
+            <input class="td col-func-qty" placeholder="0" value="{{item.designQty}}" bindinput="onFuncLayerInput" data-idx="{{index}}" data-field="designQty" adjust-position="{{true}}" />
+            <input class="td col-func-area" placeholder="0" value="{{item.funcArea}}" bindinput="onFuncLayerInput" data-idx="{{index}}" data-field="funcArea" adjust-position="{{true}}" />
+            <input class="td col-func-cum" placeholder="0" value="{{item.cumQty}}" bindinput="onFuncLayerInput" data-idx="{{index}}" data-field="cumQty" adjust-position="{{true}}" />
+          </view>
+        </view>
+      </scroll-view>
+      <view class="table-fixed-col">
+        <view class="fixed-header"><text class="th">操作</text></view>
+        <view wx:for="{{form.funcLayers}}" wx:key="index" class="fixed-row {{index % 2 === 0 ? 'row-even' : ''}}">
+          <text class="delete-row-btn" catchtap="deleteFuncLayer" data-idx="{{index}}">删</text>
+        </view>
+      </view>
+    </view>
+    <view class="table-scrollbar" wx:if="{{tables.func.scrollable}}">
+      <view
+        class="scrollbar-thumb"
+        style="width:{{tables.func.thumbWidth}}px;left:{{tables.func.thumbLeft}}px"
+        bindtouchstart="onThumbTouchStart"
+        bindtouchmove="onThumbTouchMove"
+        data-key="func"
+      ></view>
+    </view>
+    <view class="add-row-btn" bindtap="addFuncLayer">
+      <text class="add-row-icon">+</text>
+      <text class="add-row-text">添加功能层</text>
+    </view>
+  </view>
+
+  <!-- ===== 施工照片上传 ===== -->
+  <view class="section-title-bar">
+    <view class="title-line"></view>
+    <text class="section-title-text">施工照片上传</text>
+  </view>
+  <view class="section-card">
+    <view class="photo-list">
+      <view class="photo-item" wx:for="{{form.photos}}" wx:key="*this">
+        <image class="photo-img" src="{{item}}" mode="aspectFill" lazy-load="{{true}}" catchtap="previewPhoto" data-src="{{item}}" />
+        <view class="photo-delete" bindtap="deletePhoto" data-index="{{index}}">×</view>
+      </view>
+      <view class="photo-add" bindtap="addPhoto" wx:if="{{form.photos.length < 9}}">
+        <text class="photo-add-icon">+</text>
+        <text class="photo-add-text">上传照片</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 附件上传 ===== -->
+  <view class="section-title-bar">
+    <view class="title-line"></view>
+    <text class="section-title-text">附件上传</text>
+  </view>
+  <view class="section-card">
+    <view class="attach-list" wx:if="{{form.attachments.length > 0}}">
+      <view class="attach-item" wx:for="{{form.attachments}}" wx:key="index">
+        <view class="attach-main" bindtap="openAttachment" data-index="{{index}}">
+          <text class="attach-icon">{{item.ext}}</text>
+          <view class="attach-info">
+            <text class="attach-name">{{item.name}}</text>
+            <text class="attach-size">{{item.sizeText}}</text>
+          </view>
+        </view>
+        <view class="attach-delete" catchtap="deleteAttachment" data-index="{{index}}">×</view>
+      </view>
+    </view>
+    <view class="attach-add" bindtap="addAttachment" wx:if="{{form.attachments.length < 9}}">
+      <text class="attach-add-icon">+</text>
+      <text class="attach-add-text">上传附件</text>
+    </view>
+    <view class="attach-tip">支持 Excel、Word、PDF，最多9个</view>
+  </view>
+
+  <!-- ===== 机械使用情况 ===== -->
+  <view class="section-title-bar">
+    <view class="title-line"></view>
+    <text class="section-title-text">机械使用情况</text>
+  </view>
+  <view class="section-card no-pad">
+    <view class="table-header">
+      <text class="th col-name">机械名称</text>
+      <text class="th col-area">施工量(m²)</text>
+      <text class="th col-fuel">用油量</text>
+      <text class="th col-img">油量及里程图</text>
+      <text class="th col-action">操作</text>
+    </view>
+    <view wx:for="{{form.machines}}" wx:key="index" class="table-row {{index % 2 === 0 ? 'row-even' : ''}}">
+      <input class="td col-name" placeholder="名称" value="{{item.name}}" bindinput="onMachineInput" data-idx="{{index}}" data-field="name" adjust-position="{{true}}" />
+      <input class="td col-area" placeholder="0" value="{{item.area}}" bindinput="onMachineInput" data-idx="{{index}}" data-field="area" adjust-position="{{true}}" />
+      <input class="td col-fuel" placeholder="0" value="{{item.fuel}}" bindinput="onMachineInput" data-idx="{{index}}" data-field="fuel" adjust-position="{{true}}" />
+      <view class="td col-img">
+        <view class="upload-img-btn {{item.image ? 'has-image' : ''}}" bindtap="onUploadMachineImg" data-idx="{{index}}">
+          <image wx:if="{{item.image}}" class="machine-thumb" src="{{item.image}}" mode="aspectFill" />
+          <text wx:else class="upload-icon">上传</text>
+        </view>
+      </view>
+      <view class="td col-action">
+        <text class="delete-row-btn" bindtap="deleteMachine" data-idx="{{index}}">删</text>
+      </view>
+    </view>
+    <view class="add-row-btn" bindtap="addMachine">
+      <text class="add-row-icon">+</text>
+      <text class="add-row-text">添加机械</text>
+    </view>
+    <view class="table-note-edit">
+      <text class="table-note-label">机械使用情况说明：</text>
+      <textarea
+        class="table-note-input"
+        placeholder=""
+        value="{{form.machineNote}}"
+        bindinput="onInput"
+        data-field="machineNote"
+        auto-height
+        adjust-position="{{true}}"
+      />
+    </view>
+  </view>
+
+  <!-- ===== 材料使用情况 ===== -->
+  <view class="section-title-bar">
+    <view class="title-line"></view>
+    <text class="section-title-text">材料使用情况</text>
+  </view>
+  <view class="section-card no-pad">
+    <view class="table-header">
+      <text class="th col-mat-name">材料名称</text>
+      <text class="th col-mat-day">当天数量(T)</text>
+      <text class="th col-mat-total">项目累计(T)</text>
+      <text class="th col-action">操作</text>
+    </view>
+    <view wx:for="{{form.materials}}" wx:key="index" class="table-row {{index % 2 === 0 ? 'row-even' : ''}}">
+      <input class="td col-mat-name" placeholder="请输入材料名称" value="{{item.name}}" bindinput="onMaterialInput" data-idx="{{index}}" data-field="name" adjust-position="{{true}}" />
+      <input class="td col-mat-day" placeholder="0" value="{{item.dayQty}}" bindinput="onMaterialInput" data-idx="{{index}}" data-field="dayQty" adjust-position="{{true}}" />
+      <input class="td col-mat-total" placeholder="0" value="{{item.totalQty}}" bindinput="onMaterialInput" data-idx="{{index}}" data-field="totalQty" adjust-position="{{true}}" />
+      <view class="td col-action">
+        <text class="delete-row-btn" bindtap="deleteMaterial" data-idx="{{index}}">删</text>
+      </view>
+    </view>
+    <view class="add-row-btn" bindtap="addMaterial">
+      <text class="add-row-icon">+</text>
+      <text class="add-row-text">添加材料</text>
+    </view>
+    <view class="table-note-edit">
+      <text class="table-note-label">材料使用情况说明</text>
+      <textarea
+        class="table-note-input"
+        placeholder=""
+        value="{{form.materialNote}}"
+        bindinput="onInput"
+        data-field="materialNote"
+        auto-height
+        adjust-position="{{true}}"
+      />
+    </view>
+  </view>
+
+  <!-- ===== 安全文明施工情况 ===== -->
+  <view class="section-title-bar">
+    <view class="title-line"></view>
+    <text class="section-title-text">安全文明施工情况</text>
+  </view>
+  <view class="section-card">
+    <view class="safety-row">
+      <text class="safety-label">安全教育</text>
+      <view class="safety-check-group">
+        <view class="check-item {{form.safetyEdu === 1 ? 'active' : ''}}" bindtap="onSafetyCheck" data-field="safetyEdu" data-val="{{1}}">
+          <view class="checkbox {{form.safetyEdu === 1 ? 'checked' : ''}}"></view>
+          <text>是</text>
+        </view>
+        <view class="check-item {{form.safetyEdu === 0 ? 'active' : ''}}" bindtap="onSafetyCheck" data-field="safetyEdu" data-val="{{0}}">
+          <view class="checkbox {{form.safetyEdu === 0 ? 'checked' : ''}}"></view>
+          <text>否</text>
+        </view>
+      </view>
+      <input class="safety-input" placeholder="内容" value="{{form.safetyEduContent}}" bindinput="onInput" data-field="safetyEduContent" adjust-position="{{true}}" />
+    </view>
+    <view class="divider"></view>
+    <view class="safety-row">
+      <text class="safety-label">个人防护</text>
+      <view class="radio-group">
+        <view
+          wx:for="{{protectionOptions}}"
+          wx:key="*this"
+          class="radio-item small {{form.personalProtection === item ? 'active' : ''}}"
+          bindtap="onRadioTap"
+          data-field="personalProtection"
+          data-val="{{item}}"
+        >{{item}}</view>
+      </view>
+    </view>
+    <view class="divider"></view>
+    <view class="safety-row">
+      <text class="safety-label">交通疏导</text>
+      <input class="form-input" placeholder="标志、疏导员情况" value="{{form.trafficGuide}}" bindinput="onInput" data-field="trafficGuide" adjust-position="{{true}}" />
+    </view>
+    <view class="divider"></view>
+    <view class="safety-row">
+      <text class="safety-label">环境保护</text>
+      <input class="form-input" placeholder="洒水降尘、废料清理等" value="{{form.envProtect}}" bindinput="onInput" data-field="envProtect" adjust-position="{{true}}" />
+    </view>
+    <view class="divider"></view>
+    <view class="safety-row">
+      <text class="safety-label">安全隐患</text>
+      <view class="hazard-group">
+        <text class="hazard-text">发现</text>
+        <input class="hazard-input" placeholder="0" value="{{form.hazardFound}}" bindinput="onInput" data-field="hazardFound" adjust-position="{{true}}" />
+        <text class="hazard-text">处，已整改</text>
+        <input class="hazard-input" placeholder="0" value="{{form.hazardFixed}}" bindinput="onInput" data-field="hazardFixed" adjust-position="{{true}}" />
+        <text class="hazard-text">处</text>
+      </view>
+    </view>
+    <view class="divider"></view>
+    <view class="form-row-col">
+      <text class="form-label">未整改说明</text>
+      <textarea class="form-textarea" placeholder="请描述未整改情况（如无请填无）" value="{{form.hazardUnfixed}}" bindinput="onInput" data-field="hazardUnfixed" adjust-position="{{true}}" />
+    </view>
+  </view>
+
+  <!-- ===== 施工人员情况 ===== -->
+  <view class="section-title-bar">
+    <view class="title-line"></view>
+    <text class="section-title-text">施工人员情况</text>
+  </view>
+  <view class="section-card no-pad">
+    <view class="table-header">
+      <text class="th col-worker-name">姓名</text>
+      <text class="th col-worker-team">施工队伍</text>
+      <text class="th col-layer-op">操作</text>
+    </view>
+    <view wx:for="{{form.workers}}" wx:key="index" class="table-row {{index % 2 === 0 ? 'row-even' : ''}}">
+      <input class="td col-worker-name" placeholder="请输入姓名" value="{{item.name}}" bindinput="onWorkerInput" data-idx="{{index}}" data-field="name" adjust-position="{{true}}" />
+      <input class="td col-worker-team" placeholder="请输入施工队伍" value="{{item.team}}" bindinput="onWorkerInput" data-idx="{{index}}" data-field="team" adjust-position="{{true}}" />
+      <view class="td col-layer-op">
+        <text class="delete-row-btn" catchtap="deleteWorker" data-idx="{{index}}">删</text>
+      </view>
+    </view>
+    <view class="add-row-btn" bindtap="addWorker">
+      <text class="add-row-icon">+</text>
+      <text class="add-row-text">添加人员</text>
+    </view>
+  </view>
+
+  <!-- ===== 明日工作计划 ===== -->
+  <view class="section-title-bar">
+    <view class="title-line"></view>
+    <text class="section-title-text">明日工作计划</text>
+  </view>
+  <view class="section-card">
+    <textarea
+      class="form-textarea large"
+      placeholder="请填写明日工作安排及计划..."
+      value="{{form.tomorrowPlan}}"
+      bindinput="onInput"
+      data-field="tomorrowPlan"
+      adjust-position="{{true}}"
+    />
+  </view>
+
+  <!-- ===== 提交按钮 ===== -->
+  <view class="submit-area">
+    <view wx:if="{{!editMode}}" class="btn-draft" bindtap="saveDraft">暂存草稿</view>
+    <view class="btn-submit {{editMode ? 'full' : ''}}" bindtap="submitForm">{{editMode ? '提交修改' : '提交日志'}}</view>
+  </view>
+
+  <view style="height: 60rpx;"></view>
+  <template is="approvalSelector" data="{{approvalSelector: approvalSelector}}" />
+</view>

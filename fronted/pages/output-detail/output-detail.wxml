@@ -1,0 +1,99 @@
+<!-- pages/output-detail/output-detail.wxml - 拌站出料详情页 -->
+<import src="../../templates/approval-record.wxml" />
+<view class="detail-page">
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <view wx:elif="{{record}}" class="detail-content">
+    <view class="hero">
+      <view>
+        <text class="hero-value">{{record.totalWeightText}}</text>
+        <text class="hero-unit">{{record.unit}}</text>
+      </view>
+      <text class="hero-label">合计重量</text>
+    </view>
+
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">{{record.projectName}}</text>
+        <view class="badges">
+          <text class="status-tag {{record.approvalClass}}">{{record.approvalLabel}}</text>
+          <text class="category-tag">{{record.category}}</text>
+        </view>
+      </view>
+
+      <view class="row">
+        <text class="label">所属站点</text>
+        <text class="value">{{record.station}}</text>
+      </view>
+      <view class="row">
+        <text class="label">日期</text>
+        <text class="value">{{record.date || '-'}}</text>
+      </view>
+      <view class="material-detail" wx:if="{{record.materialList.length}}">
+        <view class="material-detail-row" wx:for="{{record.materialList}}" wx:key="index">
+          <text class="label">物料 {{index + 1}}</text>
+          <text class="value">{{item.name || '-'}} / {{item.weightText}} {{record.unit}}</text>
+        </view>
+      </view>
+      <view class="row highlight">
+        <text class="label">项目累计</text>
+        <text class="value">{{record.totalProjectOutputText}} {{record.unit}}</text>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">耗材明细</text>
+      </view>
+      <view class="row">
+        <text class="label">水</text>
+        <text class="value">{{record.water}}</text>
+      </view>
+      <view class="row">
+        <text class="label">电</text>
+        <text class="value">{{record.electricity}}</text>
+      </view>
+      <view class="row">
+        <text class="label">煤</text>
+        <text class="value">{{record.coal}}</text>
+      </view>
+      <view class="row">
+        <text class="label">天然气</text>
+        <text class="value">{{record.naturalGas}}</text>
+      </view>
+      <view class="row">
+        <text class="label">其他</text>
+        <text class="value">{{record.otherConsumables}}</text>
+      </view>
+    </view>
+
+    <view class="section" wx:if="{{record.remark}}">
+      <text class="remark-title">备注</text>
+      <text class="remark">{{record.remark}}</text>
+    </view>
+
+    <view class="section" wx:if="{{record.approvalStatus === 'rejected' && record.approvalRemark}}">
+      <text class="remark-title">拒绝原因</text>
+      <text class="remark">{{record.approvalRemark}}</text>
+    </view>
+
+    <view wx:if="{{record.canEdit}}" class="action-section">
+      <button class="edit-btn" bindtap="onEdit">修改表单</button>
+    </view>
+
+    <view class="section muted">
+      <view class="row">
+        <text class="label">提交时间</text>
+        <text class="value">{{record.createTimeStr}}</text>
+      </view>
+      <view class="row" wx:if="{{record.approvalTimeStr !== '-'}}">
+        <text class="label">审批时间</text>
+        <text class="value">{{record.approvalTimeStr}}</text>
+      </view>
+    </view>
+
+    <template is="approvalTimeline" data="{{timeline: record.approvalTimeline}}" />
+  </view>
+
+  <view wx:else class="empty">未找到出料记录</view>
+</view>

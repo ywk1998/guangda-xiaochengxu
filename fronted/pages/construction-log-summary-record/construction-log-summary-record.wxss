@@ -1,0 +1,263 @@
+/* pages/construction-log-summary-record/construction-log-summary-record.wxss */
+
+/* 筛选栏 */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 24rpx;
+  background: #fff;
+  border-bottom: 1rpx solid #eee;
+}
+
+.filter-input {
+  height: 56rpx;
+  padding: 0 20rpx;
+  background: #f0f0f0;
+  border-radius: 28rpx;
+  font-size: 26rpx;
+  color: #333;
+  min-width: 200rpx;
+  flex: 1;
+  margin-right: 16rpx;
+}
+
+.filter-pill {
+  display: flex;
+  align-items: center;
+  height: 56rpx;
+  padding: 0 20rpx;
+  background: #f0f0f0;
+  border-radius: 28rpx;
+  font-size: 26rpx;
+  color: #666;
+  margin-right: 16rpx;
+}
+
+.filter-pill.active {
+  background: #e6f3ff;
+  color: #1a6fc4;
+}
+
+.filter-pill .arrow {
+  font-size: 20rpx;
+  margin-left: 8rpx;
+}
+
+.filter-pill.reset {
+  color: #999;
+  font-size: 24rpx;
+}
+
+/* 统计栏 */
+.stat-bar {
+  padding: 16rpx 24rpx;
+  background: #fafafa;
+}
+
+.stat-text {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 记录列表 */
+.record-list {
+  box-sizing: border-box;
+  height: calc(100vh - 220rpx);
+  padding: 16rpx 24rpx;
+}
+
+/* 卡片 */
+.record-card {
+  box-sizing: border-box;
+  max-width: 100%;
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.card-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.expand-text {
+  margin-left: 20rpx;
+  color: #1a6fc4;
+  font-size: 24rpx;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* 行 */
+.card-row {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10rpx 0;
+}
+
+.card-row-time {
+  padding-top: 14rpx;
+  margin-top: 6rpx;
+  border-top: 1rpx dashed #eee;
+}
+
+.row-label {
+  font-size: 26rpx;
+  color: #999;
+  width: 220rpx;
+  flex-shrink: 0;
+}
+
+.row-value {
+  min-width: 0;
+  max-width: 420rpx;
+  padding-right: 6rpx;
+  box-sizing: border-box;
+  font-size: 28rpx;
+  color: #333;
+  text-align: right;
+  flex: 1;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
+.row-value.highlight {
+  color: #1a6fc4;
+  font-weight: 600;
+}
+
+.row-value.time {
+  font-size: 24rpx;
+  color: #bbb;
+}
+
+.detail-list {
+  margin-top: 18rpx;
+  padding-top: 18rpx;
+  border-top: 1rpx solid #eef2f6;
+}
+
+.detail-card {
+  margin-bottom: 18rpx;
+  border: 1rpx solid #e6edf5;
+  border-radius: 12rpx;
+  overflow: hidden;
+  background: #fbfdff;
+}
+
+.detail-card:last-child {
+  margin-bottom: 0;
+}
+
+.detail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  padding: 18rpx 20rpx;
+  background: #eef7ff;
+  border-bottom: 1rpx solid #dcecfb;
+}
+
+.detail-index {
+  flex-shrink: 0;
+  color: #1a6fc4;
+  font-size: 26rpx;
+  font-weight: 700;
+}
+
+.detail-layer {
+  min-width: 0;
+  color: #333;
+  font-size: 26rpx;
+  font-weight: 600;
+  text-align: right;
+  word-break: break-all;
+}
+
+.detail-row {
+  min-height: 66rpx;
+  padding: 0 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22rpx;
+  border-bottom: 1rpx solid #eef2f6;
+}
+
+.detail-row:last-child {
+  border-bottom: 0;
+}
+
+.detail-row text:first-child {
+  flex-shrink: 0;
+  width: 300rpx;
+  color: #888;
+  font-size: 24rpx;
+}
+
+.detail-row text:last-child {
+  min-width: 0;
+  color: #333;
+  font-size: 26rpx;
+  font-weight: 600;
+  text-align: right;
+  word-break: break-all;
+}
+
+.detail-row .profit {
+  color: #27ae60;
+}
+
+.detail-row .loss {
+  color: #e74c3c;
+}
+
+/* 空状态 */
+.empty {
+  text-align: center;
+  padding: 120rpx 0;
+  color: #ccc;
+  font-size: 28rpx;
+}
+
+/* 加载提示 */
+.loading-tip {
+  text-align: center;
+  padding: 30rpx 0;
+  color: #ccc;
+  font-size: 24rpx;
+}
+
+.record-actions {
+  padding-top: 18rpx;
+}
+
+.edit-btn {
+  width: 100%;
+  height: 72rpx;
+  line-height: 72rpx;
+  border-radius: 14rpx;
+  background: #e7f3ff;
+  color: #1a6fc4;
+  font-size: 26rpx;
+  font-weight: 700;
+}

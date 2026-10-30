@@ -1,0 +1,154 @@
+<import src="../../templates/approval-selector.wxml" />
+<!-- pages/construction-log-summary/construction-log-summary.wxml -->
+<scroll-view scroll-y class="container">
+
+  <!-- 顶部标题 -->
+  <view class="page-header">
+    <text class="header-record-link" bindtap="goToRecord">查看记录 ></text>
+  </view>
+
+  <!-- ===== 主表区域 ===== -->
+  <view class="main-section">
+    <view class="section-title">基本信息</view>
+
+    <view class="form-row">
+      <text class="form-label">项目名称</text>
+      <input class="form-input" placeholder="请输入项目名称" value="{{projectName}}" bindinput="onMainInput" data-field="projectName"/>
+    </view>
+
+    <view class="form-row">
+      <text class="form-label">日期</text>
+      <picker mode="date" value="{{date}}" bindchange="onDateChange">
+        <view class="form-value {{date ? '' : 'placeholder'}}">{{date || '请选择日期'}}</view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- ===== 明细子表区域 ===== -->
+  <view class="sub-section">
+
+    <view class="sub-header">
+      <text class="sub-header-title">施工明细</text>
+      <button class="btn-add-row" bindtap="addRow">+ 添加一行</button>
+    </view>
+
+    <!-- 每行数据为一个纵向卡片 -->
+    <view class="sub-card" wx:for="{{subList}}" wx:key="index">
+      <!-- 卡片头部 -->
+      <view class="card-header">
+        <text class="card-index">第 {{index + 1}} 行</text>
+        <button class="btn-del-row" bindtap="deleteRow" data-index="{{index}}">删除</button>
+      </view>
+
+      <!-- 字段：结构/功能层 -->
+      <view class="card-field">
+        <text class="field-label">结构/功能层</text>
+        <input class="field-input" value="{{item.layer}}" data-index="{{index}}" data-field="layer" bindinput="onSubInput" placeholder="请输入"/>
+      </view>
+
+      <!-- 字段：设计厚度 -->
+      <view class="card-field">
+        <text class="field-label">设计厚度(cm)</text>
+        <input class="field-input" value="{{item.designThick}}" data-index="{{index}}" data-field="designThick" bindinput="onSubInput" placeholder="0"/>
+      </view>
+
+      <!-- 字段：目标厚度 -->
+      <view class="card-field">
+        <text class="field-label">目标厚度(cm)</text>
+        <input class="field-input" value="{{item.targetThick}}" data-index="{{index}}" data-field="targetThick" bindinput="onSubInput" placeholder="0"/>
+      </view>
+
+      <!-- 字段：平均厚度 -->
+      <view class="card-field">
+        <text class="field-label">平均厚度(cm)</text>
+        <input class="field-input" value="{{item.avgThick}}" data-index="{{index}}" data-field="avgThick" bindinput="onSubInput" placeholder="0"/>
+      </view>
+
+      <!-- 字段：密度 -->
+      <view class="card-field">
+        <text class="field-label">密度(t/m³)</text>
+        <input class="field-input" value="{{item.density}}" data-index="{{index}}" data-field="density" bindinput="onSubInput" placeholder="0"/>
+      </view>
+
+      <!-- 字段：设计撒布量 -->
+      <view class="card-field">
+        <text class="field-label">设计撒布量(kg/m²)</text>
+        <input class="field-input" value="{{item.designSpread}}" data-index="{{index}}" data-field="designSpread" bindinput="onSubInput" placeholder="0"/>
+      </view>
+
+      <!-- 字段：目标撒布量 -->
+      <view class="card-field">
+        <text class="field-label">目标撒布量(kg/m²)</text>
+        <input class="field-input" value="{{item.targetSpread}}" data-index="{{index}}" data-field="targetSpread" bindinput="onSubInput" placeholder="0"/>
+      </view>
+
+      <!-- 字段：合同量 -->
+      <view class="card-field">
+        <text class="field-label">合同量(m²)</text>
+        <input class="field-input" value="{{item.contractArea}}" data-index="{{index}}" data-field="contractArea" bindinput="onSubInput" placeholder="0"/>
+      </view>
+
+      <!-- 字段：目标用量 -->
+      <view class="card-field">
+        <text class="field-label">目标用量(T)</text>
+        <input class="field-input" value="{{item.targetTon}}" data-index="{{index}}" data-field="targetTon" bindinput="onSubInput" placeholder="0"/>
+      </view>
+
+      <!-- 字段：累计施工面积 -->
+      <view class="card-field">
+        <text class="field-label">累计施工面积(m²)</text>
+        <input class="field-input" value="{{item.cumArea}}" data-index="{{index}}" data-field="cumArea" bindinput="onSubInput" placeholder="0"/>
+      </view>
+
+      <!-- 字段：实际撒布量 -->
+      <view class="card-field">
+        <text class="field-label">实际撒布量(kg/m²)</text>
+        <input class="field-input" value="{{item.actualSpread}}" data-index="{{index}}" data-field="actualSpread" bindinput="onSubInput" placeholder="0"/>
+      </view>
+
+      <!-- 字段：材料名称 -->
+      <view class="card-field">
+        <text class="field-label">材料名称</text>
+        <input class="field-input" value="{{item.material}}" data-index="{{index}}" data-field="material" bindinput="onSubInput" placeholder="请输入"/>
+      </view>
+
+      <!-- 字段：累计用量 -->
+      <view class="card-field">
+        <text class="field-label">累计用量(T)</text>
+        <input class="field-input" value="{{item.cumTon}}" data-index="{{index}}" data-field="cumTon" bindinput="onSubInput" placeholder="0"/>
+      </view>
+
+      <!-- 字段：实际面积目标用量 -->
+      <view class="card-field">
+        <text class="field-label">实际面积目标用量(T)</text>
+        <input class="field-input" value="{{item.areaTon}}" data-index="{{index}}" data-field="areaTon" bindinput="onSubInput" placeholder="0"/>
+      </view>
+
+      <!-- 字段：盈亏 -->
+      <view class="card-field">
+        <text class="field-label">盈亏</text>
+        <input class="field-input profit-input {{item.profitClass}}" value="{{item.profit}}" data-index="{{index}}" data-field="profit" bindinput="onSubInput" placeholder="0"/>
+      </view>
+
+      <!-- 字段：备注 -->
+      <view class="card-field">
+        <text class="field-label">备注</text>
+        <input class="field-input" value="{{item.remark}}" data-index="{{index}}" data-field="remark" bindinput="onSubInput" placeholder="请输入"/>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:if="{{subList.length === 0}}" class="empty-tip">
+      暂无数据，点击上方"添加一行"开始录入
+    </view>
+
+  </view>
+
+  <!-- ===== 底部按钮 ===== -->
+  <view class="btn-area">
+    <view wx:if="{{!editMode}}" class="btn-draft" bindtap="saveDraft">暂存草稿</view>
+    <view class="btn-submit" bindtap="submitForm">{{editMode ? '提交修改' : '提交表单'}}</view>
+  </view>
+
+</scroll-view>
+<template is="approvalSelector" data="{{approvalSelector: approvalSelector}}" />

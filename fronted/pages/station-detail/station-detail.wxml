@@ -1,0 +1,124 @@
+<!-- 拌站详情页 -->
+<view class="detail-page">
+
+  <!-- 顶部大图 -->
+  <swiper
+    class="detail-swiper"
+    indicator-dots="{{true}}"
+    indicator-color="rgba(255,255,255,0.5)"
+    indicator-active-color="#fff"
+    autoplay="{{true}}"
+    circular="{{true}}"
+  >
+    <swiper-item wx:for="{{station.images}}" wx:key="*this">
+      <view class="swiper-slide" style="background:#f5f6fa">
+        <image class="slide-img" src="{{item}}" mode="aspectFill" binderror="onImgError" />
+      </view>
+    </swiper-item>
+  </swiper>
+
+  <!-- 基本信息头部 -->
+  <view class="detail-header">
+    <view class="header-top">
+      <text class="detail-name">{{station.name}}</text>
+      <view class="status-badge {{station.statusClass}}">
+        <text>{{station.status}}</text>
+      </view>
+    </view>
+    <view class="detail-address">
+      <text class="addr-dot">📍</text>
+      <text class="addr-text">{{station.address}}</text>
+    </view>
+    <view class="quick-actions">
+      <view class="qa-btn qa-call" bindtap="onCall">
+        <text class="qa-icon">📞</text>
+        <text class="qa-label">电话咨询</text>
+      </view>
+      <view class="qa-btn qa-nav" bindtap="onNavigate">
+        <text class="qa-icon">🧭</text>
+        <text class="qa-label">导航前往</text>
+      </view>
+      <view class="qa-btn qa-share" bindtap="onShare">
+        <text class="qa-icon">📤</text>
+        <text class="qa-label">分享</text>
+      </view>
+    </view>
+  </view>
+
+  
+
+  <!-- 拌站概述 -->
+  <view class="section-card">
+    <view class="card-header">
+      <view class="card-title-icon">📋</view>
+      <text class="card-title">拌站概述</text>
+    </view>
+    <view class="detail-grid">
+      <view class="detail-cell">
+        <text class="dc-label">建站时间</text>
+        <text class="dc-value">{{station.detail.established}}</text>
+      </view>
+      <view class="detail-cell">
+        <text class="dc-label">占地面积</text>
+        <text class="dc-value">{{station.detail.area}}</text>
+      </view>
+      <view class="detail-cell">
+        <text class="dc-label">日产量</text>
+        <text class="dc-value">{{station.capacity}}</text>
+      </view>
+      <view class="detail-cell">
+        <text class="dc-label">拌缸型号</text>
+        <text class="dc-value">{{station.tankSize}}</text>
+      </view>
+    </view>
+    <view class="equipment-row">
+      <text class="equip-label">主设备</text>
+      <text class="equip-value">{{station.detail.equipment}}</text>
+    </view>
+  </view>
+
+  <!-- 生产产品 -->
+  <view class="section-card">
+    <view class="card-header">
+      <view class="card-title-icon">🛢️</view>
+      <text class="card-title">生产产品</text>
+    </view>
+    <view class="product-tags">
+      <text wx:for="{{station.detail.products}}" wx:key="*this" class="prod-tag">{{item}}</text>
+    </view>
+  </view>
+
+  <!-- 供应范围 -->
+  <view class="section-card">
+    <view class="card-header">
+      <view class="card-title-icon">🗺️</view>
+      <text class="card-title">供应范围</text>
+    </view>
+    <view class="service-range">
+      <text class="range-text">{{station.detail.serviceRange}}</text>
+    </view>
+  </view>
+
+  <!-- 拌站特色 -->
+  <view class="section-card">
+    <view class="card-header">
+      <view class="card-title-icon">⭐</view>
+      <text class="card-title">拌站特色</text>
+    </view>
+    <view class="feature-list">
+      <view wx:for="{{station.detail.features}}" wx:key="*this" class="feature-item">
+        <view class="feature-dot"></view>
+        <text class="feature-text">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部联系 -->
+  <view class="bottom-contact">
+    <view class="contact-btn" bindtap="onCall">
+      <text>📞 立即联系 {{station.name}}</text>
+    </view>
+  </view>
+
+  <view style="height: 140rpx;"></view>
+</view>

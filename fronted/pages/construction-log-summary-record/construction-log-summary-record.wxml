@@ -1,0 +1,94 @@
+<!-- pages/construction-log-summary-record/construction-log-summary-record.wxml -->
+<import src="../../templates/approval-record.wxml" />
+<view class="page">
+  <!-- 筛选区 -->
+  <view class="filter-bar">
+    <input class="filter-input" placeholder="输入项目名称搜索" value="{{filterName}}" bindinput="onNameInput" adjust-position="{{true}}" />
+    <picker mode="date" value="{{filterDate}}" bindchange="onDateFilterChange">
+      <view class="filter-pill {{filterDate ? 'active' : ''}}">
+        {{filterDate || '全部日期'}}
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+    <view class="filter-pill reset" bindtap="onResetFilter">重置</view>
+  </view>
+
+  <!-- 统计 -->
+  <view class="stat-bar">
+    <text class="stat-text">共 {{totalCount}} 条施工记录</text>
+  </view>
+
+  <!-- 记录列表 -->
+  <scroll-view scroll-y class="record-list" bindscrolltolower="loadMore" lower-threshold="100">
+    <block wx:for="{{recordList}}" wx:key="_id">
+      <view class="record-card">
+        <!-- 卡片头部 -->
+        <view class="card-header" bindtap="toggleDetail" data-id="{{item._id}}">
+          <text class="card-title">{{item.projectName || '项目'}}</text>
+          <text class="status-tag {{item.statusClass}}">{{item.statusLabel}}</text>
+          <text class="expand-text">{{item.expanded ? '收起' : '查看明细'}}</text>
+        </view>
+
+        <!-- 日期 -->
+        <view class="card-row">
+          <text class="row-label">施工日期</text>
+          <text class="row-value">{{item.date}}</text>
+        </view>
+
+        <!-- 施工明细数量 -->
+        <view class="card-row" wx:if="{{item.subList && item.subList.length}}">
+          <text class="row-label">施工明细</text>
+          <text class="row-value highlight">{{item.subList.length}} 条</text>
+        </view>
+
+        <!-- 提交时间 -->
+        <view class="card-row card-row-time">
+          <text class="row-label">提交时间</text>
+          <text class="row-value time">{{item.submitTimeStr}}</text>
+        </view>
+        <view class="card-row" wx:if="{{item.approvalStatus === 'rejected' && item.approvalRemark}}">
+          <text class="row-label">拒绝原因</text>
+          <text class="row-value">{{item.approvalRemark}}</text>
+        </view>
+        <view wx:if="{{item.canEdit}}" class="record-actions">
+          <button class="edit-btn" bindtap="onEdit" data-id="{{item._id}}">修改表单</button>
+        </view>
+        <template is="approvalTimeline" data="{{timeline: item.approvalTimeline}}" />
+
+        <view wx:if="{{item.expanded}}" class="detail-list">
+          <view class="detail-card" wx:for="{{item.subList}}" wx:for-item="detail" wx:for-index="detailIndex" wx:key="detailIndex">
+            <view class="detail-head">
+              <text class="detail-index">第 {{detailIndex + 1}} 行</text>
+              <text class="detail-layer">{{detail.layer}}</text>
+            </view>
+
+            <view class="detail-row"><text>设计厚度(cm)</text><text>{{detail.designThick}}</text></view>
+            <view class="detail-row"><text>目标厚度(cm)</text><text>{{detail.targetThick}}</text></view>
+            <view class="detail-row"><text>平均厚度(cm)</text><text>{{detail.avgThick}}</text></view>
+            <view class="detail-row"><text>密度(t/m³)</text><text>{{detail.density}}</text></view>
+            <view class="detail-row"><text>设计撒布量(kg/m²)</text><text>{{detail.designSpread}}</text></view>
+            <view class="detail-row"><text>目标撒布量(kg/m²)</text><text>{{detail.targetSpread}}</text></view>
+            <view class="detail-row"><text>合同量(m²)</text><text>{{detail.contractArea}}</text></view>
+            <view class="detail-row"><text>目标用量(T)</text><text>{{detail.targetTon}}</text></view>
+            <view class="detail-row"><text>累计施工面积(m²)</text><text>{{detail.cumArea}}</text></view>
+            <view class="detail-row"><text>实际撒布量(kg/m²)</text><text>{{detail.actualSpread}}</text></view>
+            <view class="detail-row"><text>材料名称</text><text>{{detail.material}}</text></view>
+            <view class="detail-row"><text>累计用量(T)</text><text>{{detail.cumTon}}</text></view>
+            <view class="detail-row"><text>实际面积目标用量(T)</text><text>{{detail.areaTon}}</text></view>
+            <view class="detail-row"><text>盈亏</text><text class="{{detail.profitClass}}">{{detail.profit}}</text></view>
+            <view class="detail-row"><text>备注</text><text>{{detail.remark}}</text></view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view wx:if="{{!loading && recordList.length === 0}}" class="empty">
+      <text>暂无施工记录</text>
+    </view>
+
+    <!-- 加载更多 -->
+    <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+    <view wx:if="{{noMore && recordList.length > 0}}" class="loading-tip">— 已加载全部 —</view>
+  </scroll-view>
+</view>

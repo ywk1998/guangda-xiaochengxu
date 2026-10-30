@@ -1,0 +1,201 @@
+<import src="../../templates/approval-record.wxml" />
+<view class="page">
+  <view class="filter-bar">
+    <picker mode="selector" range="{{tabs}}" range-key="label" bindchange="onTabChange">
+      <view class="filter-pill">
+        {{activeTabLabel}}
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+    <picker mode="selector" range="{{statusOptions}}" range-key="label" bindchange="onStatusChange">
+      <view class="filter-pill muted">
+        {{activeStatusLabel}}
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+  </view>
+
+  <view class="stat-bar">
+    <text class="stat-text">共 {{totalCount}} 条记录</text>
+    <view class="notify-btn" bindtap="onEnableNotify">开启审批提醒</view>
+  </view>
+
+  <scroll-view scroll-y class="record-list" bindscrolltolower="loadMore" lower-threshold="100">
+    <block wx:for="{{recordList}}" wx:key="recordKey">
+      <view class="record-card">
+        <view class="card-header">
+          <text class="card-title">{{item.title || '审批记录'}}</text>
+          <view class="status-tag {{item.statusClass}}">{{item.statusLabel}}</view>
+        </view>
+
+        <view class="card-row" wx:if="{{item.submitterName || item.submitter}}">
+          <text class="row-label">提交人</text>
+          <text class="row-value">{{item.submitterName || item.submitter}}</text>
+        </view>
+        <view class="card-row" wx:if="{{item.date || item.TJtime || item.maintenanceDate}}">
+          <text class="row-label">日期</text>
+          <text class="row-value">{{item.date || item.TJtime || item.maintenanceDate}}</text>
+        </view>
+        <view class="card-row" wx:if="{{item.station || item.stationName}}">
+          <text class="row-label">站点</text>
+          <text class="row-value">{{item.station || item.stationName}}</text>
+        </view>
+        <view class="card-row" wx:if="{{item.projectName || item.projectLocation}}">
+          <text class="row-label">项目</text>
+          <text class="row-value">{{item.projectName || item.projectLocation}}</text>
+        </view>
+        <view class="card-row" wx:if="{{item.totalAmount !== undefined}}">
+          <text class="row-label">金额</text>
+          <text class="row-value highlight">¥{{item.totalAmount}}</text>
+        </view>
+        <view class="card-row" wx:if="{{item.totalVolume !== undefined || item.volume !== undefined}}">
+          <text class="row-label">油量</text>
+          <text class="row-value highlight">{{item.totalVolume || item.volume}} 升</text>
+        </view>
+        <view class="card-row card-row-time">
+          <text class="row-label">提交时间</text>
+          <text class="row-value time">{{item.submitTimeStr}}</text>
+        </view>
+
+        <view class="detail-toggle" bindtap="toggleDetail" data-id="{{item._id}}">
+          <text>{{item.expanded ? '收起完整信息' : '查看完整信息'}}</text>
+          <text class="detail-arrow">{{item.expanded ? '▲' : '▼'}}</text>
+        </view>
+
+        <view class="detail-panel" wx:if="{{item.expanded}}">
+          <block wx:for="{{item.detailGroups}}" wx:key="key" wx:for-item="detail">
+            <view class="detail-row" wx:if="{{!detail.isList}}">
+              <text class="detail-label">{{detail.label}}</text>
+              <image
+                wx:if="{{detail.isImage}}"
+                class="detail-image"
+                src="{{detail.value}}"
+                mode="aspectFill"
+                bindtap="previewImage"
+                data-url="{{detail.value}}"
+              />
+              <view wx:elif="{{detail.isImageList}}" class="detail-image-list">
+                <image
+                  wx:for="{{detail.images}}"
+                  wx:key="*this"
+                  wx:for-item="imageUrl"
+                  class="detail-image"
+                  src="{{imageUrl}}"
+                  mode="aspectFill"
+                  bindtap="previewImage"
+                  data-url="{{imageUrl}}"
+                  data-urls="{{detail.images}}"
+                />
+              </view>
+              <text wx:else class="detail-value">{{detail.value}}</text>
+            </view>
+            <view class="detail-block" wx:else>
+              <text class="detail-label block-label">{{detail.label}}</text>
+              <view class="detail-subcard" wx:for="{{detail.list}}" wx:key="index" wx:for-item="sub">
+                <text class="detail-subtitle">{{sub.title}}</text>
+                <image
+                  wx:if="{{sub.isImage}}"
+                  class="detail-image"
+                  src="{{sub.text}}"
+                  mode="aspectFill"
+                  bindtap="previewImage"
+                  data-url="{{sub.text}}"
+                />
+                <view wx:elif="{{sub.isImageList}}" class="detail-image-list">
+                  <image
+                    wx:for="{{sub.images}}"
+                    wx:key="*this"
+                    wx:for-item="imageUrl"
+                    class="detail-image"
+                    src="{{imageUrl}}"
+                    mode="aspectFill"
+                    bindtap="previewImage"
+                    data-url="{{imageUrl}}"
+                    data-urls="{{sub.images}}"
+                  />
+                </view>
+                <text wx:elif="{{sub.text}}" class="detail-subtext">{{sub.text}}</text>
+                <block wx:else>
+                  <view class="detail-subrow" wx:for="{{sub.rows}}" wx:key="key" wx:for-item="row">
+                    <text class="detail-sub-label">{{row.label}}</text>
+                    <image
+                      wx:if="{{row.isImage}}"
+                      class="detail-image small"
+                      src="{{row.value}}"
+                      mode="aspectFill"
+                      bindtap="previewImage"
+                      data-url="{{row.value}}"
+                    />
+                    <view wx:elif="{{row.isImageList}}" class="detail-image-list small">
+                      <image
+                        wx:for="{{row.images}}"
+                        wx:key="*this"
+                        wx:for-item="imageUrl"
+                        class="detail-image small"
+                        src="{{imageUrl}}"
+                        mode="aspectFill"
+                        bindtap="previewImage"
+                        data-url="{{imageUrl}}"
+                        data-urls="{{row.images}}"
+                      />
+                    </view>
+                    <text wx:else class="detail-sub-value">{{row.value}}</text>
+                  </view>
+                </block>
+              </view>
+            </view>
+          </block>
+          <template is="approvalTimeline" data="{{timeline: item.approvalTimeline}}" />
+        </view>
+
+        <view class="approval-actions" wx:if="{{item.canApprove}}">
+          <button class="action-btn reject" bindtap="onReject" data-id="{{item._id}}" data-collection="{{item.collectionName}}">拒绝</button>
+          <button class="action-btn approve" bindtap="onApprove" data-id="{{item._id}}" data-collection="{{item.collectionName}}">通过</button>
+        </view>
+      </view>
+    </block>
+
+    <view wx:if="{{!loading && recordList.length === 0}}" class="empty">
+      <text>暂无审批记录</text>
+    </view>
+    <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+    <view wx:if="{{noMore && recordList.length > 0}}" class="loading-tip">— 已加载全部 —</view>
+  </scroll-view>
+
+  <view class="approval-selector" wx:if="{{nextApprovalSelector.visible}}">
+    <view class="selector-nav">
+      <view class="selector-nav-btn" bindtap="closeNextApprovalSelector">‹</view>
+      <view class="selector-title">{{nextApprovalSelector.title}}</view>
+      <view class="selector-nav-btn" bindtap="closeNextApprovalSelector">×</view>
+    </view>
+    <view class="selector-search">
+      <text class="selector-search-icon">⌕</text>
+      <input
+        class="selector-search-input"
+        placeholder="搜索"
+        value="{{nextApprovalSelector.keyword}}"
+        bindinput="onNextApprovalSelectorSearch"
+        confirm-type="search"
+      />
+    </view>
+    <view class="selector-tab">用户</view>
+    <scroll-view scroll-y class="selector-scroll">
+      <view
+        class="selector-user"
+        wx:for="{{nextApprovalSelector.filteredApprovers}}"
+        wx:key="openid"
+        bindtap="toggleNextApprover"
+        data-openid="{{item.openid}}"
+      >
+        <view class="selector-avatar">用户</view>
+        <view class="selector-name">{{item.name}}</view>
+        <view class="selector-check {{item.checked ? 'active' : ''}}">{{item.checked ? '✓' : ''}}</view>
+      </view>
+      <view class="selector-empty" wx:if="{{nextApprovalSelector.filteredApprovers.length === 0}}">暂无可选用户</view>
+    </scroll-view>
+    <view class="selector-footer">
+      <text class="selector-count">已选择 {{nextApprovalSelector.selectedCount}} 人</text>
+      <button class="selector-confirm" bindtap="confirmNextApprovalSelector">确定</button>
+    </view>
+  </view>
+</view>

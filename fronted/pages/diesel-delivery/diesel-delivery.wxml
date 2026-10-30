@@ -1,0 +1,110 @@
+<import src="../../templates/approval-selector.wxml" />
+<!-- pages/diesel-delivery/diesel-delivery.wxml - 加油车送油记录表 -->
+<view class="page-delivery">
+
+  <!-- 顶部标题 -->
+  <view class="page-header">
+    <text class="header-title">加油车送油记录表</text>
+    <text class="header-record-link" bindtap="goToRecord">查看记录 ></text>
+  </view>
+
+  <!-- ===== 表单区域 ===== -->
+  <view class="form-section">
+
+    <!-- 送油日期 -->
+    <view class="form-row">
+      <text class="form-label">送油日期</text>
+      <picker mode="date" value="{{form.date}}" bindchange="onDateChange">
+        <view class="form-value {{form.date ? '' : 'placeholder'}}">
+          {{form.date || '请选择日期'}}
+        </view>
+      </picker>
+    </view>
+    <view class="form-line"></view>
+
+    <!-- 加油车车牌号 -->
+    <view class="form-row">
+      <text class="form-label">加油车车牌号</text>
+      <input class="form-input" placeholder="请输入车牌号" value="{{form.plateNumber}}" bindinput="onInput" data-field="plateNumber" adjust-position="{{true}}" />
+    </view>
+    <view class="form-line"></view>
+
+    <!-- 项目地点 -->
+    <view class="form-row">
+      <text class="form-label">项目地点</text>
+      <input class="form-input" placeholder="请输入项目地点" value="{{form.projectLocation}}" bindinput="onInput" data-field="projectLocation" adjust-position="{{true}}" />
+    </view>
+
+    <!-- ===== 设备加油记录列表 ===== -->
+    <view class="equipment-list">
+      <view class="equipment-card" wx:for="{{form.equipmentList}}" wx:key="index" wx:for-index="equipmentIndex">
+        <!-- 设备卡片头部 -->
+        <view class="equipment-header">
+          <text class="equipment-title">设备 {{equipmentIndex + 1}}</text>
+          <view class="delete-btn" bindtap="deleteEquipment" data-index="{{equipmentIndex}}">删除</view>
+        </view>
+
+        <!-- 设备名称/编号 -->
+        <view class="form-row">
+          <text class="form-label">设备名称/编号</text>
+          <input class="form-input" placeholder="请输入设备信息" value="{{item.equipment}}" bindinput="onEquipmentInput" data-index="{{equipmentIndex}}" data-field="equipment" adjust-position="{{true}}" />
+        </view>
+        <view class="form-line"></view>
+
+        <!-- 加油升数 -->
+        <view class="form-row">
+          <text class="form-label">加油升数</text>
+          <view class="volume-wrap">
+            <input class="form-input volume-input" placeholder="0" value="{{item.volume}}" bindinput="onEquipmentInput" data-index="{{equipmentIndex}}" data-field="volume" adjust-position="{{true}}" />
+            <text class="unit-text">升</text>
+          </view>
+        </view>
+        <view class="form-line"></view>
+
+        <!-- 加油图片 -->
+        <view class="form-row-img">
+          <text class="form-label">加油图片</text>
+        </view>
+        <view class="upload-area">
+          <view class="preview-item" wx:for="{{item.image}}" wx:key="*this" wx:for-item="imageItem" wx:for-index="imageIndex">
+            <image class="preview-img" src="{{imageItem}}" mode="aspectFill" bindtap="previewImage" data-index="{{equipmentIndex}}" data-url="{{imageItem}}" />
+            <view class="image-delete" catchtap="deleteEquipmentImage" data-index="{{equipmentIndex}}" data-image-index="{{imageIndex}}">×</view>
+          </view>
+          <view wx:if="{{item.image.length < 9}}" class="upload-btn" bindtap="onUploadImage" data-index="{{equipmentIndex}}">
+            <text class="upload-icon">+</text>
+            <text class="upload-text">上传图片</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 添加设备按钮 -->
+    <view class="add-equipment-btn" bindtap="addEquipment">
+      <text class="add-icon">+</text>
+      <text class="add-text">添加设备</text>
+    </view>
+
+    <!-- 加油司机 -->
+    <view class="form-row">
+      <text class="form-label">加油司机</text>
+      <input class="form-input" placeholder="请输入司机姓名" value="{{form.driver}}" bindinput="onInput" data-field="driver" adjust-position="{{true}}" />
+    </view>
+    <view class="form-line"></view>
+
+    <!-- 备注 -->
+    <view class="form-row">
+      <text class="form-label">备注</text>
+    </view>
+    <textarea class="remark-area" placeholder="请输入备注信息（选填）..." value="{{form.remark}}" bindinput="onInput" data-field="remark" adjust-position="{{true}}" maxlength="200" />
+
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="btn-area">
+    <view class="btn-draft" bindtap="saveDraft">暂存草稿</view>
+    <view class="btn-submit" bindtap="submitForm">提交记录</view>
+  </view>
+
+  <view style="height: 60rpx;"></view>
+  <template is="approvalSelector" data="{{approvalSelector: approvalSelector}}" />
+</view>

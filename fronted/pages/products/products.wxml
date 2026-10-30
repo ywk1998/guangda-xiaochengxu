@@ -1,0 +1,173 @@
+<!-- pages/products/products.wxml - 产品列表页（左右分栏布局） -->
+<view class="page-products">
+
+  <!-- 主体区域：左侧分类 + 右侧内容 -->
+  <view class="products-layout">
+
+    <!-- 左侧分类导航 -->
+    <view class="category-sidebar">
+      <scroll-view scroll-y class="cat-scroll-area" show-scrollbar="{{false}}">
+        <view
+          wx:for="{{categories}}"
+          wx:key="id"
+          class="cat-item {{activeCatId === item.id ? 'active' : ''}}"
+          bindtap="onCatTap"
+          data-id="{{item.id}}"
+        >
+          <text class="cat-icon">{{item.icon}}</text>
+          <text class="cat-name">{{item.name}}</text>
+        </view>
+      </scroll-view>
+      
+    </view>
+
+    <!-- 右侧产品区域 -->
+    <scroll-view
+      scroll-y
+      class="products-main"
+      show-scrollbar="{{false}}"
+      refresher-enabled="{{true}}"
+      bindrefresherrefresh="onPullDownRefresh"
+    >
+      <!-- 当前分类标题 -->
+      <view class="main-header">
+        <text class="main-title">{{currentCatName}}</text>
+        <text class="main-sub">{{currentCatDesc}}</text>
+      </view>
+
+      <!-- 搜索栏 -->
+      <view class="search-bar">
+        <view class="search-input-wrap">
+          <text class="search-icon">🔍</text>
+          <input
+            class="search-input"
+            placeholder="{{activeCatId === 'mixing' ? '搜索拌站名称或地址' : '搜索产品'}}"
+            placeholder-style="color:#bbbbbb"
+            bindinput="onSearchInput"
+            value="{{searchText}}"
+          />
+        </view>
+      </view>
+
+      <!-- ===== 搅拌站卡片列表 ===== -->
+      <block wx:if="{{activeCatId === 'mixing'}}">
+        <view class="station-list">
+          <view
+            wx:for="{{filteredProducts}}"
+            wx:key="id"
+            class="station-card"
+            bindtap="onStationTap"
+            data-id="{{item.id}}"
+          >
+            <!-- 顶部图片 -->
+            <view class="station-img-wrap">
+              <image
+                class="station-img"
+                src="{{item.image}}"
+                mode="aspectFill"
+                binderror="onImgError"
+                data-index="{{index}}"
+              />
+              <view wx:if="{{item.status}}" class="station-status {{item.statusClass}}">
+                <text>{{item.status}}</text>
+              </view>
+            </view>
+
+            <!-- 信息区 -->
+            <view class="station-info">
+              <view class="station-name-row">
+                <text class="station-name">{{item.name}}</text>
+                <view wx:if="{{item.distance}}" class="distance-tag">
+                  <text>{{item.distance}}</text>
+                </view>
+              </view>
+              <view class="station-address">
+                <text class="addr-icon">📍</text>
+                <text class="addr-text">{{item.address}}</text>
+              </view>
+
+              <!-- 核心信息网格 -->
+              <view class="info-grid">
+                <view class="info-cell">
+                  <text class="info-label">生产类型</text>
+                  <text class="info-value">{{item.type}}</text>
+                </view>
+                <view class="info-cell">
+                  <text class="info-label">日产量</text>
+                  <text class="info-value">{{item.capacity}}</text>
+                </view>
+                <view class="info-cell">
+                  <text class="info-label">拌缸容量</text>
+                  <text class="info-value">{{item.tankSize}}</text>
+                </view>
+              </view>
+
+              <!-- 标签 -->
+              <view class="station-tags">
+                <text wx:for="{{item.tags}}" wx:key="*this" class="s-tag">{{item}}</text>
+              </view>
+
+              <!-- 底部操作 -->
+              <view class="station-actions">
+                <view class="action-btn" catchtap="onCall" data-phone="{{item.phone}}">
+                  <text class="action-icon">📞</text>
+                  <text class="action-text">电话咨询</text>
+                </view>
+                <view class="action-btn" catchtap="onNavigate" data-item="{{item}}">
+                  <text class="action-icon">🧭</text>
+                  <text class="action-text">导航前往</text>
+                </view>
+                <view class="action-btn" catchtap="onStationTap" data-id="{{item.id}}">
+                  <text class="action-icon">📋</text>
+                  <text class="action-text">查看详情</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+
+      <!-- ===== 普通产品卡片列表 ===== -->
+      <block wx:else>
+        <view class="products-grid">
+          <view
+            wx:for="{{filteredProducts}}"
+            wx:key="id"
+            class="product-card"
+            bindtap="onProductTap"
+            data-id="{{item.id}}"
+          >
+            <!-- 产品图片区 -->
+            <view class="prod-img-wrap" style="background:{{item.coverColor}}">
+              <image wx:if="{{item.icon}}" class="prod-img-icon" src="{{item.icon}}" mode="aspectFit" />
+            </view>
+            <!-- 产品信息 -->
+            <view class="prod-info">
+              <text class="prod-name">{{item.name}}</text>
+              <text class="prod-desc">{{item.desc}}</text>
+              <view class="prod-tags">
+                <text
+                  wx:for="{{item.tags}}"
+                  wx:key="*this"
+                  wx:for-item="tag"
+                  class="prod-tag"
+                >{{tag}}</text>
+              </view>
+            </view>
+            <view class="prod-arrow">›</view>
+          </view>
+        </view>
+      </block>
+
+      <!-- 空状态 -->
+      <view wx:if="{{filteredProducts.length === 0}}" class="empty-wrap">
+        <text class="empty-icon">📭</text>
+        <text class="empty-text">暂无相关产品</text>
+      </view>
+
+      <!-- 底部留白 -->
+      <view style="height: 40rpx;"></view>
+    </scroll-view>
+
+  </view>
+</view>

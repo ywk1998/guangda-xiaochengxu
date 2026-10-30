@@ -1,0 +1,21 @@
+# 依赖包
+node_modules/
+
+# 环境变量 / 密钥（绝对不能进版本库）
+.env
+.env.local
+.env.*.local
+
+# 编辑器 / 系统生成文件
+.idea/
+.vscode/
+.DS_Store
+
+# 根目录明文密码文件（该文件名存在编码异常，用根目录 txt 通配覆盖）
+/*.txt
+
+# 日志
+*.log
+
+# 部署备份
+deploy-backups/

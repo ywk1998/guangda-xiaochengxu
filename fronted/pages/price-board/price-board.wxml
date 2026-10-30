@@ -1,0 +1,51 @@
+<!-- pages/price-board/price-board.wxml -->
+<view class="page-price">
+
+  <!-- 顶部标题 -->
+  <view class="page-header">
+    <text class="header-title">今日挂牌价格</text>
+    <text class="header-date">{{todayDate}}</text>
+  </view>
+
+  <!-- 左侧导航 + 右侧内容 -->
+  <view class="content-wrapper">
+    
+    <!-- 左侧站点导航 -->
+    <scroll-view class="left-nav" scroll-y>
+      <view 
+        class="nav-item {{currentStation === index ? 'active' : ''}}" 
+        wx:for="{{stations}}"
+        wx:key="index"
+        bindtap="switchStation"
+        data-index="{{index}}"
+      >
+        <text class="nav-text">{{item.name}}</text>
+      </view>
+    </scroll-view>
+
+    <!-- 右侧价格列表 -->
+    <scroll-view class="right-content" scroll-y>
+      <view class="station-header">
+        <text class="station-name">{{stations[currentStation].name}}</text>
+        <text class="station-date">{{todayDate}}</text>
+      </view>
+
+      <!-- 表头 -->
+      <view class="price-header">
+        <text class="col-product">产品</text>
+        <text class="col-price">上次价格</text>
+        <text class="col-price">本次价格</text>
+      </view>
+
+      <!-- 价格列表 -->
+      <view class="price-list">
+        <view class="price-item" wx:for="{{priceList}}" wx:key="index">
+          <text class="col-product">{{item.productName}}</text>
+          <text class="col-price">{{item.OldPrice || '--'}}</text>
+          <text class="col-price">{{item.NewPrice || '--'}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+</view>

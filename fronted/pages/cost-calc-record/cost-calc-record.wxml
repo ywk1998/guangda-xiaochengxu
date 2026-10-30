@@ -1,0 +1,83 @@
+<!-- pages/cost-calc-record/cost-calc-record.wxml -->
+<import src="../../templates/approval-record.wxml" />
+<view class="page">
+  <!-- 筛选区 -->
+  <view class="filter-bar">
+    <picker mode="selector" range="{{stationOptions}}" range-key="name" bindchange="onStationFilterChange">
+      <view class="filter-pill {{filterStation ? 'active' : ''}}">
+        {{filterStationName || '全部站点'}}
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+    <picker mode="date" value="{{filterDate}}" bindchange="onDateFilterChange">
+      <view class="filter-pill {{filterDate ? 'active' : ''}}">
+        {{filterDate || '全部日期'}}
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+    <view class="filter-pill reset" bindtap="onResetFilter">重置</view>
+  </view>
+
+  <!-- 统计 -->
+  <view class="stat-bar">
+    <text class="stat-text">共 {{totalCount}} 条调价记录</text>
+  </view>
+
+  <!-- 记录列表 -->
+  <scroll-view scroll-y class="record-list" bindscrolltolower="loadMore" lower-threshold="100">
+    <block wx:for="{{recordList}}" wx:key="_id">
+      <view class="record-card">
+        <!-- 卡片头部 -->
+        <view class="card-header">
+          <text class="card-title">{{item.productName}}</text>
+          <view class="card-meta">
+            <view class="status-tag {{item.statusClass}}">{{item.statusLabel}}</view>
+            <view class="price-change-tag {{item.priceChangeClass}}">{{item.priceChangeLabel}}</view>
+          </view>
+        </view>
+        <!-- 站点信息 -->
+        <view class="card-row">
+          <text class="row-label">所属站点</text>
+          <text class="row-value">{{item.stationName}}</text>
+        </view>
+        <!-- 调价时间 -->
+        <view class="card-row">
+          <text class="row-label">调价时间</text>
+          <text class="row-value">{{item.TJtime}}</text>
+        </view>
+        <!-- 价格变化 -->
+        <view class="card-row">
+          <text class="row-label">价格变动</text>
+          <view class="price-wrap">
+            <text class="price-old">{{item.OldPrice || '-'}}</text>
+            <text class="price-arrow">→</text>
+            <text class="price-new">{{item.NewPrice}}</text>
+            <text class="price-unit">元/吨</text>
+          </view>
+        </view>
+        <!-- 调价情况 -->
+        <view class="card-row card-row-reason">
+          <text class="row-label">调价情况</text>
+          <text class="row-value reason">{{item.TJReason}}</text>
+        </view>
+        <view class="card-row card-row-reason" wx:if="{{item.approvalStatus === 'rejected' && item.approvalRemark}}">
+          <text class="row-label">拒绝原因</text>
+          <text class="row-value reason">{{item.approvalRemark}}</text>
+        </view>
+        <template is="approvalTimeline" data="{{timeline: item.approvalTimeline}}" />
+        <view wx:if="{{item.canEdit}}" class="record-actions">
+          <button class="edit-btn" bindtap="onEdit" data-id="{{item._id}}">修改表单</button>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view wx:if="{{!loading && recordList.length === 0}}" class="empty">
+      <text>暂无调价记录</text>
+    </view>
+
+    <!-- 加载更多 -->
+    <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+    <view wx:if="{{noMore && recordList.length > 0}}" class="loading-tip">— 已加载全部 —</view>
+  </scroll-view>
+</view>

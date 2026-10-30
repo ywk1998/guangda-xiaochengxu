@@ -1,0 +1,80 @@
+<!-- pages/index/index.wxml - 首页 -->
+<scroll-view scroll-y class="page-index" enhanced="{{true}}" show-scrollbar="{{false}}">
+
+  <!-- ===== 顶部 Hero 区域 ===== -->
+  <view class="hero-section">
+    <!-- 轮播图 -->
+    <swiper
+      class="banner-swiper"
+      indicator-dots="{{true}}"
+      indicator-color="rgba(255,255,255,0.5)"
+      indicator-active-color="#ffffff"
+      autoplay="{{true}}"
+      interval="{{4000}}"
+      circular="{{true}}"
+    >
+      <swiper-item wx:for="{{banners}}" wx:key="id" bindtap="onBannerTap" data-link="{{item.link}}">
+        <image class="banner-img" src="{{item.imageUrl}}" mode="aspectFill" />
+        <view class="banner-mask">
+          <text class="banner-title">{{item.title}}</text>
+        </view>
+      </swiper-item>
+    </swiper>
+
+    <!-- 公司 Slogan 浮层 -->
+    <view class="slogan-card">
+      <image class="slogan-logo" src="/images/logo.jpg" mode="aspectFit" />
+      <view class="slogan-info">
+        <text class="slogan-name">{{companyInfo.name}}</text>
+        <text class="slogan-desc">{{companyInfo.slogan}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 快捷入口 ===== -->
+  <view class="quick-links-section">
+    <view
+      wx:for="{{quickLinks}}"
+      wx:key="id"
+      class="quick-link-item"
+      bindtap="onQuickLinkTap"
+      data-url="{{item.url}}"
+    >
+      <view class="quick-link-icon">{{item.icon}}</view>
+      <text class="quick-link-label">{{item.label}}</text>
+    </view>
+  </view>
+
+  
+
+  <!-- ===== 产品速览 ===== -->
+  <view class="products-preview-section px-30 mt-24">
+    <view class="flex-between mb-24">
+      <text class="section-title" style="margin-bottom:0">核心业务</text>
+      <view class="more-btn" bindtap="goProducts">
+        <text class="more-text">查看全部</text>
+        <text class="more-arrow">›</text>
+      </view>
+    </view>
+    <scroll-view scroll-x class="products-scroll" show-scrollbar="{{false}}">
+      <view class="products-preview-list">
+        <view class="product-preview-card" wx:for="{{[0,1,2]}}" wx:key="*this" bindtap="goProducts">
+          <view class="ppc-icon-wrap" style="background:{{item===0?'#1a6fc4':item===1?'#e67e22':'#27ae60'}}">
+            <text class="ppc-icon">{{item===0?'🏭':item===1?'🛤️':'🚛'}}</text>
+          </view>
+          <text class="ppc-name">{{item===0?'沥青搅拌站':item===1?'道路摊铺':'设备租赁'}}</text>
+          <text class="ppc-desc">{{item===0?'大型拌合站生产':item===1?'专业施工团队':'全型号设备出租'}}</text>
+        </view>
+        <view class="product-preview-more" bindtap="goProducts">
+          <text class="ppm-icon">+</text>
+          <text class="ppm-text">更多</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+ 
+
+  <!-- 底部留白 -->
+  <view style="height: 40rpx;"></view>
+</scroll-view>

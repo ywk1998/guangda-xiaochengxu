@@ -1,0 +1,118 @@
+<!-- pages/mixing-tower-maintenance-record/mixing-tower-maintenance-record.wxml -->
+<import src="../../templates/approval-record.wxml" />
+<view class="page">
+  <!-- 筛选区 -->
+  <view class="filter-bar">
+    <input class="filter-input" placeholder="站点名称" value="{{filterName}}" bindinput="onNameInput" adjust-position="{{true}}" />
+    <picker mode="date" value="{{filterDate}}" bindchange="onDateFilterChange">
+      <view class="filter-pill {{filterDate ? 'active' : ''}}">
+        {{filterDate || '全部日期'}}
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+    <view class="filter-pill reset" bindtap="onResetFilter">重置</view>
+  </view>
+
+  <!-- 统计 -->
+  <view class="stat-bar">
+    <text class="stat-text">共 {{totalCount}} 条保养记录</text>
+  </view>
+
+  <!-- 记录列表 -->
+  <scroll-view scroll-y class="record-list" bindscrolltolower="loadMore" lower-threshold="100">
+    <block wx:for="{{recordList}}" wx:key="_id">
+      <view class="record-card">
+        <!-- 卡片头部 -->
+        <view class="card-header" bindtap="toggleDetail" data-id="{{item._id}}">
+          <text class="card-title">{{item.stationName || '站点'}} - {{item.towerModel || '型号'}}</text>
+          <text class="expand-text">{{item.expanded ? '收起' : '查看明细'}}</text>
+          <view wx:if="{{item.status}}" class="status-tag {{item.statusClass}}">{{item.statusLabel}}</view>
+        </view>
+
+        <!-- 保养类型 & 日期 -->
+        <view class="card-row">
+          <text class="row-label">保养类型</text>
+          <text class="row-value highlight">{{item.maintenanceType}}</text>
+        </view>
+
+        <view class="card-row">
+          <text class="row-label">保养日期</text>
+          <text class="row-value">{{item.maintenanceDate}}</text>
+        </view>
+
+        <!-- 保养部位数量 -->
+        <view class="card-row" wx:if="{{item.maintenanceItems && item.maintenanceItems.length}}">
+          <text class="row-label">保养部位</text>
+          <text class="row-value">{{item.maintenanceItems.length}} 处</text>
+        </view>
+
+        <!-- 配件数量 -->
+        <view class="card-row" wx:if="{{item.partsList && item.partsList.length}}">
+          <text class="row-label">更换配件</text>
+          <text class="row-value">{{item.partsList.length}} 项</text>
+        </view>
+
+        <!-- 负责人 -->
+        <view class="card-row" wx:if="{{item.manager}}">
+          <text class="row-label">负责人</text>
+          <text class="row-value">{{item.manager}}</text>
+        </view>
+        <view class="card-row" wx:if="{{item.approvalStatus === 'rejected' && item.approvalRemark}}">
+          <text class="row-label">拒绝原因</text>
+          <text class="row-value">{{item.approvalRemark}}</text>
+        </view>
+
+        <!-- 提交时间 -->
+        <view class="card-row card-row-time">
+          <text class="row-label">提交时间</text>
+          <text class="row-value time">{{item.submitTimeStr}}</text>
+        </view>
+        <view wx:if="{{item.canEdit}}" class="record-actions">
+          <button class="edit-btn" bindtap="onEdit" data-id="{{item._id}}">修改表单</button>
+        </view>
+        <template is="approvalTimeline" data="{{timeline: item.approvalTimeline}}" />
+
+        <view wx:if="{{item.expanded}}" class="detail-list">
+          <view class="detail-section" wx:if="{{item.maintenanceItems && item.maintenanceItems.length}}">
+            <view class="detail-title">保养部位明细</view>
+            <view class="detail-card" wx:for="{{item.maintenanceItems}}" wx:for-item="detail" wx:for-index="detailIndex" wx:key="detailIndex">
+              <view class="detail-head">保养部位 {{detailIndex + 1}}</view>
+              <view class="detail-row"><text>保养部位</text><text>{{detail.part}}</text></view>
+              <view class="detail-row detail-row-text"><text>保养内容</text><text>{{detail.content}}</text></view>
+            </view>
+          </view>
+
+          <view class="detail-section" wx:if="{{item.partsList && item.partsList.length}}">
+            <view class="detail-title">更换配件明细</view>
+            <view class="detail-card" wx:for="{{item.partsList}}" wx:for-item="part" wx:for-index="partIndex" wx:key="partIndex">
+              <view class="detail-head">配件 {{partIndex + 1}}</view>
+              <view class="detail-row"><text>配件名称</text><text>{{part.name}}</text></view>
+              <view class="detail-row"><text>配件数量</text><text>{{part.quantity}}</text></view>
+            </view>
+          </view>
+
+          <view class="detail-section" wx:if="{{item.photos && item.photos.length}}">
+            <view class="detail-title">现场照片</view>
+            <view class="photo-grid">
+              <image wx:for="{{item.photos}}" wx:for-item="photo" wx:key="*this" class="photo-thumb" src="{{photo}}" mode="aspectFill" catchtap="previewPhoto" data-current="{{photo}}" data-urls="{{item.photos}}" />
+            </view>
+          </view>
+
+          <view class="detail-section" wx:if="{{item.remark}}">
+            <view class="detail-title">备注</view>
+            <view class="remark-text">{{item.remark}}</view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view wx:if="{{!loading && recordList.length === 0}}" class="empty">
+      <text>暂无保养记录</text>
+    </view>
+
+    <!-- 加载更多 -->
+    <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+    <view wx:if="{{noMore && recordList.length > 0}}" class="loading-tip">— 已加载全部 —</view>
+  </scroll-view>
+</view>

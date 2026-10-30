@@ -1,0 +1,313 @@
+<!-- pages/log-detail/log-detail.wxml -->
+<import src="../../templates/approval-record.wxml" />
+<scroll-view scroll-y class="page-detail" show-scrollbar="{{false}}" wx:if="{{log}}">
+
+  <!-- 顶部状态 -->
+  <view class="detail-header">
+    <view class="detail-header-row">
+      <text class="detail-project">{{log.projectName}}</text>
+      <view class="detail-status {{log.approvalStatus === 'approved' ? 'status-submitted' : log.approvalStatus === 'rejected' ? 'status-draft' : 'status-draft'}}">
+        {{log.approvalStatus === 'approved' ? '已通过' : log.approvalStatus === 'rejected' ? '已拒绝' : '待审批'}}
+      </view>
+    </view>
+    <text class="detail-submit-time">提交时间：{{log.submitTimeStr}}</text>
+  </view>
+
+  <!-- 基本信息 -->
+  <view class="section-card">
+    <view class="detail-title-bar">
+      <view class="title-dot"></view>
+      <text class="detail-title-text">基本信息</text>
+    </view>
+    <view class="detail-row">
+      <text class="detail-label">项目名称</text>
+      <text class="detail-value">{{log.projectName || '未填写'}}</text>
+    </view>
+    <view class="detail-divider"></view>
+    <view class="detail-row">
+      <text class="detail-label">施工路段/桩号</text>
+      <text class="detail-value">{{log.roadSection || '未填写'}}</text>
+    </view>
+    <view class="detail-divider"></view>
+    <view class="detail-row">
+      <text class="detail-label">日期</text>
+      <text class="detail-value">{{log.date || '未填写'}}</text>
+    </view>
+    <view class="detail-divider"></view>
+    <view class="detail-row">
+      <text class="detail-label">天气</text>
+      <text class="detail-value">{{log.weather || '未填写'}}</text>
+    </view>
+    <view class="detail-divider"></view>
+    <view class="detail-row">
+      <text class="detail-label">记录人</text>
+      <text class="detail-value">{{log.recorder || '未填写'}}</text>
+    </view>
+  </view>
+
+  <!-- 施工内容 -->
+  <view class="section-card">
+    <view class="detail-title-bar">
+      <view class="title-dot"></view>
+      <text class="detail-title-text">施工内容</text>
+    </view>
+
+    <view class="detail-subsection">
+      <text class="detail-subsection-title">水稳层</text>
+      <scroll-view class="dt-scroll" scroll-x wx:if="{{log.shuiwenLayers && log.shuiwenLayers.length}}">
+        <view class="detail-table dt-inner-wide">
+          <view class="dt-header">
+            <text class="dt-th" style="flex:1.4">层位</text>
+            <text class="dt-th" style="flex:1.4">设计数量</text>
+            <text class="dt-th" style="flex:1.4">设计厚度</text>
+            <text class="dt-th" style="flex:1.4">施工面积</text>
+            <text class="dt-th" style="flex:1.4">平均厚度</text>
+            <text class="dt-th" style="flex:1.6">累计完成数量</text>
+          </view>
+          <view wx:for="{{log.shuiwenLayers}}" wx:key="index" class="dt-row">
+            <text class="dt-td" style="flex:1.4">{{item.name || '-'}}</text>
+            <text class="dt-td" style="flex:1.4">{{item.designQty || '-'}}</text>
+            <text class="dt-td" style="flex:1.4">{{item.designThickness || '-'}} cm</text>
+            <text class="dt-td" style="flex:1.4">{{item.constructArea || '-'}} m²</text>
+            <text class="dt-td" style="flex:1.4">{{item.avgThickness || '-'}} cm</text>
+            <text class="dt-td" style="flex:1.6">{{item.cumQty || '-'}}</text>
+          </view>
+        </view>
+      </scroll-view>
+      <view wx:else class="detail-empty">未填写</view>
+    </view>
+
+    <view class="detail-subsection">
+      <text class="detail-subsection-title">结构层</text>
+      <scroll-view class="dt-scroll" scroll-x wx:if="{{log.structureLayers && log.structureLayers.length}}">
+        <view class="detail-table dt-inner-wide">
+          <view class="dt-header">
+            <text class="dt-th" style="flex:1.4">类型</text>
+            <text class="dt-th" style="flex:1.4">设计数量</text>
+            <text class="dt-th" style="flex:1.4">设计厚度</text>
+            <text class="dt-th" style="flex:1.4">施工面积</text>
+            <text class="dt-th" style="flex:1.4">平均厚度</text>
+            <text class="dt-th" style="flex:1.6">累计完成数量</text>
+          </view>
+          <view wx:for="{{log.structureLayers}}" wx:key="index" class="dt-row">
+            <text class="dt-td" style="flex:1.4">{{item.type || '-'}}</text>
+            <text class="dt-td" style="flex:1.4">{{item.designQty || '-'}}</text>
+            <text class="dt-td" style="flex:1.4">{{item.designThickness || '-'}} cm</text>
+            <text class="dt-td" style="flex:1.4">{{item.constructArea || '-'}} m²</text>
+            <text class="dt-td" style="flex:1.4">{{item.avgThickness || '-'}} cm</text>
+            <text class="dt-td" style="flex:1.6">{{item.cumQty || '-'}}</text>
+          </view>
+        </view>
+      </scroll-view>
+      <view wx:else class="detail-empty">未填写</view>
+    </view>
+
+    <view class="detail-subsection">
+      <text class="detail-subsection-title">功能层</text>
+      <scroll-view class="dt-scroll" scroll-x wx:if="{{log.funcLayers && log.funcLayers.length}}">
+        <view class="detail-table dt-inner-narrow">
+          <view class="dt-header">
+            <text class="dt-th" style="flex:1.6">功能层类型</text>
+            <text class="dt-th" style="flex:1.4">设计数量</text>
+            <text class="dt-th" style="flex:1.4">施工面积</text>
+            <text class="dt-th" style="flex:1.6">累计完成数量</text>
+          </view>
+          <view wx:for="{{log.funcLayers}}" wx:key="index" class="dt-row">
+            <text class="dt-td" style="flex:1.6">{{item.type || '-'}}</text>
+            <text class="dt-td" style="flex:1.4">{{item.designQty || '-'}}</text>
+            <text class="dt-td" style="flex:1.4">{{item.funcArea || '-'}} m²</text>
+            <text class="dt-td" style="flex:1.6">{{item.cumQty || '-'}}</text>
+          </view>
+        </view>
+      </scroll-view>
+      <view wx:else class="detail-empty">未填写</view>
+    </view>
+
+    </view>
+
+  <!-- 施工照片 -->
+  <view class="section-card">
+    <view class="detail-title-bar">
+      <view class="title-dot"></view>
+      <text class="detail-title-text">施工照片</text>
+    </view>
+    <view class="photo-grid" wx:if="{{log.photos && log.photos.length > 0}}">
+      <image
+        wx:for="{{log.photos}}"
+        wx:key="*this"
+        class="photo-thumb"
+        src="{{item}}"
+        mode="aspectFill"
+        bindtap="previewPhoto"
+        data-url="{{item}}"
+      />
+    </view>
+    <view wx:else class="detail-empty">未上传照片</view>
+  </view>
+
+  <!-- 附件 -->
+  <view class="section-card">
+    <view class="detail-title-bar">
+      <view class="title-dot"></view>
+      <text class="detail-title-text">附件</text>
+    </view>
+    <view class="attach-list" wx:if="{{log.attachments && log.attachments.length > 0}}">
+      <view class="attach-item" wx:for="{{log.attachments}}" wx:key="index">
+        <view class="attach-main" bindtap="openAttachment" data-index="{{index}}">
+          <text class="attach-icon">{{item.ext}}</text>
+          <view class="attach-info">
+            <text class="attach-name">{{item.name}}</text>
+            <text class="attach-size">{{item.sizeText}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view wx:else class="detail-empty">未上传附件</view>
+  </view>
+
+  <!-- 机械使用情况 -->
+  <view class="section-card">
+    <view class="detail-title-bar">
+      <view class="title-dot"></view>
+      <text class="detail-title-text">机械使用情况</text>
+    </view>
+    <view class="detail-table" wx:if="{{log.machines && log.machines.length > 0}}">
+      <view class="dt-header">
+        <text class="dt-th" style="flex:2">机械名称</text>
+        <text class="dt-th" style="flex:1.5">施工量(m²)</text>
+        <text class="dt-th" style="flex:1.5">用油量</text>
+        <text class="dt-th" style="flex:1.4">图片</text>
+      </view>
+      <view wx:for="{{log.machines}}" wx:key="index" class="dt-row">
+        <text class="dt-td" style="flex:2">{{item.name || '-'}}</text>
+        <text class="dt-td" style="flex:1.5">{{item.area || '-'}}</text>
+        <text class="dt-td" style="flex:1.5">{{item.fuel || '-'}}</text>
+        <view class="dt-td" style="flex:1.4">
+          <image wx:if="{{item.image}}" class="detail-thumb" src="{{item.image}}" mode="aspectFill" />
+          <text wx:else>-</text>
+        </view>
+      </view>
+    </view>
+    <view wx:else class="detail-empty">未填写</view>
+    <view class="detail-note">说明：{{log.machineNote || '未填写'}}</view>
+  </view>
+
+  <!-- 材料使用情况 -->
+  <view class="section-card">
+    <view class="detail-title-bar">
+      <view class="title-dot"></view>
+      <text class="detail-title-text">材料使用情况</text>
+    </view>
+    <view class="detail-table" wx:if="{{log.materials && log.materials.length > 0}}">
+      <view class="dt-header">
+        <text class="dt-th" style="flex:2.5">材料名称</text>
+        <text class="dt-th" style="flex:1.5">当天数量(T)</text>
+        <text class="dt-th" style="flex:1.5">项目累计(T)</text>
+      </view>
+      <view wx:for="{{log.materials}}" wx:key="index" class="dt-row">
+        <text class="dt-td" style="flex:2.5">{{item.name || '-'}}</text>
+        <text class="dt-td" style="flex:1.5">{{item.dayQty || '-'}}</text>
+        <text class="dt-td" style="flex:1.5">{{item.totalQty || '-'}}</text>
+      </view>
+    </view>
+    <view wx:else class="detail-empty">未填写</view>
+    <view class="detail-note">说明：{{log.materialNote || '未填写'}}</view>
+  </view>
+
+  <!-- 安全文明施工 -->
+  <view class="section-card">
+    <view class="detail-title-bar">
+      <view class="title-dot"></view>
+      <text class="detail-title-text">安全文明施工</text>
+    </view>
+    <view class="detail-row">
+      <text class="detail-label">安全教育</text>
+      <text class="detail-value">{{log.safetyEduText}}</text>
+    </view>
+    <view class="detail-divider"></view>
+    <view class="detail-row">
+      <text class="detail-label">教育内容</text>
+      <text class="detail-value">{{log.safetyEduContent || '未填写'}}</text>
+    </view>
+    <view class="detail-divider"></view>
+    <view class="detail-row">
+      <text class="detail-label">个人防护</text>
+      <text class="detail-value">{{log.personalProtection || '未填写'}}</text>
+    </view>
+    <view class="detail-divider"></view>
+    <view class="detail-row">
+      <text class="detail-label">交通疏导</text>
+      <text class="detail-value">{{log.trafficGuide || '未填写'}}</text>
+    </view>
+    <view class="detail-divider"></view>
+    <view class="detail-row">
+      <text class="detail-label">环境保护</text>
+      <text class="detail-value">{{log.envProtect || '未填写'}}</text>
+    </view>
+    <view class="detail-divider"></view>
+    <view class="detail-row">
+      <text class="detail-label">安全隐患</text>
+      <text class="detail-value">发现 {{log.hazardFound || 0}} 处，已整改 {{log.hazardFixed || 0}} 处</text>
+    </view>
+    <view class="detail-remark">
+      <text class="remark-label">未整改说明：</text>
+      <text class="remark-text">{{log.hazardUnfixed || '未填写'}}</text>
+    </view>
+  </view>
+
+  <!-- 施工人员 -->
+  <view class="section-card">
+    <view class="detail-title-bar">
+      <view class="title-dot"></view>
+      <text class="detail-title-text">施工人员情况</text>
+    </view>
+    <view class="detail-table" wx:if="{{log.workers && log.workers.length > 0}}">
+      <view class="dt-header">
+        <text class="dt-th" style="flex:1.5">姓名</text>
+        <text class="dt-th" style="flex:2">施工队伍</text>
+      </view>
+      <view wx:for="{{log.workers}}" wx:key="index" class="dt-row">
+        <text class="dt-td" style="flex:1.5">{{item.name || '-'}}</text>
+        <text class="dt-td" style="flex:2">{{item.team || '-'}}</text>
+      </view>
+    </view>
+    <view wx:else class="detail-empty">未填写</view>
+  </view>
+
+  <!-- 明日工作计划 -->
+  <view class="section-card">
+    <view class="detail-title-bar">
+      <view class="title-dot"></view>
+      <text class="detail-title-text">明日工作计划</text>
+    </view>
+    <text class="detail-block-text">{{log.tomorrowPlan || '未填写'}}</text>
+  </view>
+
+  <view class="section-card" wx:if="{{log.approvalStatus === 'rejected' && log.approvalRemark}}">
+    <view class="detail-title-bar">
+      <view class="title-dot"></view>
+      <text class="detail-title-text">拒绝原因</text>
+    </view>
+    <text class="detail-block-text">{{log.approvalRemark}}</text>
+  </view>
+
+  <template is="approvalTimeline" data="{{timeline: log.approvalTimeline}}" />
+
+  <!-- 操作按钮 -->
+  <view class="delete-area">
+    <view
+      wx:if="{{log.canEdit}}"
+      class="btn-edit"
+      bindtap="onEdit"
+    >修改表单</view>
+    <view class="btn-copy" bindtap="onCopyForm">复制表单</view>
+    <view class="btn-delete" bindtap="onDelete">删除此日志</view>
+  </view>
+
+  <view style="height: 40rpx;"></view>
+</scroll-view>
+
+<!-- 加载中 -->
+<view wx:if="{{loading}}" class="loading-full">
+  <text>加载中...</text>
+</view>

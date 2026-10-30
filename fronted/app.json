@@ -1,0 +1,80 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/products/products",
+    "pages/product-detail/product-detail",
+    "pages/contact/contact",
+    "pages/profile/profile",
+    "pages/construction-log/construction-log",
+    "pages/log-detail/log-detail",
+    "pages/mixing-stations/mixing-stations",
+    "pages/station-detail/station-detail",
+    "pages/output-list/output-list",
+    "pages/output-detail/output-detail",
+    "pages/diesel-entry/diesel-entry",
+    "pages/diesel-entry-record/diesel-entry-record",
+    "pages/diesel-out/diesel-out",
+    "pages/diesel-out-record/diesel-out-record",
+    "pages/diesel-delivery/diesel-delivery",
+    "pages/diesel-delivery-record/diesel-delivery-record",
+    "pages/price-board/price-board",
+    "pages/cost-calc/cost-calc",
+    "pages/cost-calc-record/cost-calc-record",
+    "pages/construction-log-record/construction-log-record",
+    "pages/construction-log-summary/construction-log-summary",
+    "pages/construction-log-summary-record/construction-log-summary-record",
+    "pages/my-forms/my-forms",
+    "pages/approval-list/approval-list",
+    "pages/approval-notifications/approval-notifications",
+    "pages/my-drafts/my-drafts",
+    "pages/equipment-maintenance/equipment-maintenance",
+    "pages/equipment-maintenance-record/equipment-maintenance-record",
+    "pages/mixing-tower-maintenance/mixing-tower-maintenance",
+    "pages/mixing-tower-maintenance-record/mixing-tower-maintenance-record"
+  ],
+  "window": {
+    "backgroundColor": "#f5f5f5",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#1a6fc4",
+    "navigationBarTitleText": "广东远大集团",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#1a6fc4",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/tab/home.png",
+        "selectedIconPath": "images/tab/home-active.png"
+      },
+      {
+        "pagePath": "pages/products/products",
+        "text": "产品",
+        "iconPath": "images/tab/4.png",
+        "selectedIconPath": "images/tab/3.png"
+      },
+      {
+        "pagePath": "pages/contact/contact",
+        "text": "联系",
+        "iconPath": "images/tab/2.png",
+        "selectedIconPath": "images/tab/1.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "images/tab/profile.png",
+        "selectedIconPath": "images/tab/profile-active.png"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于显示公司地理位置"
+    }
+  }
+}

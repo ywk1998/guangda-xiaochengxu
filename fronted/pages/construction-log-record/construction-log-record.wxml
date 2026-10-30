@@ -1,0 +1,80 @@
+<!-- pages/construction-log-record/construction-log-record.wxml -->
+<view class="page">
+  <!-- 筛选区 -->
+  <view class="filter-bar">
+    <picker mode="selector" range="{{projectOptions}}" range-key="name" bindchange="onProjectFilterChange">
+      <view class="filter-pill {{filterProject ? 'active' : ''}}">
+        {{filterProjectName || '全部项目'}}
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+    <picker mode="date" value="{{filterDate}}" bindchange="onDateFilterChange">
+      <view class="filter-pill {{filterDate ? 'active' : ''}}">
+        {{filterDate || '全部日期'}}
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+    <view class="filter-pill reset" bindtap="onResetFilter">重置</view>
+  </view>
+
+  <!-- 统计 -->
+  <view class="stat-bar">
+    <text class="stat-text">共 {{totalCount}} 条施工日志</text>
+  </view>
+
+  <!-- 记录列表 -->
+  <scroll-view scroll-y class="record-list" bindscrolltolower="loadMore" lower-threshold="100">
+    <block wx:for="{{recordList}}" wx:key="_id">
+      <view class="record-card" bindtap="goToDetail" data-id="{{item._id}}">
+        <!-- 卡片头部 -->
+        <view class="card-header">
+          <text class="card-title">{{item.projectName}}</text>
+          <view class="status-tag {{item.statusClass}}">{{item.statusLabel}}</view>
+        </view>
+
+        <!-- 施工路段 -->
+        <view class="card-row">
+          <text class="row-label">施工路段</text>
+          <text class="row-value">{{item.roadSection || '-'}}</text>
+        </view>
+
+        <!-- 日期 & 天气 -->
+        <view class="card-row">
+          <text class="row-label">日期 / 天气</text>
+          <text class="row-value">{{item.date}}  {{item.weather}}</text>
+        </view>
+
+        <!-- 记录人 -->
+        <view class="card-row">
+          <text class="row-label">记录人</text>
+          <text class="row-value">{{item.recorder}}</text>
+        </view>
+
+        <!-- 审批人 -->
+        <view class="card-row">
+          <text class="row-label">审批人</text>
+          <text class="row-value">{{item.approverName || '-'}}</text>
+        </view>
+        <view class="card-row" wx:if="{{item.approvalStatus === 'rejected' && item.approvalRemark}}">
+          <text class="row-label">拒绝原因</text>
+          <text class="row-value">{{item.approvalRemark}}</text>
+        </view>
+
+        <!-- 提交时间 -->
+        <view class="card-row card-row-time">
+          <text class="row-label">提交时间</text>
+          <text class="row-value time">{{item.submitTimeStr}}</text>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view wx:if="{{!loading && recordList.length === 0}}" class="empty">
+      <text>暂无施工日志</text>
+    </view>
+
+    <!-- 加载更多 -->
+    <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+    <view wx:if="{{noMore && recordList.length > 0}}" class="loading-tip">— 已加载全部 —</view>
+  </scroll-view>
+</view>

@@ -1,0 +1,112 @@
+<!-- 沥青搅拌站 - 拌站列表页 -->
+<view class="stations-page">
+
+  <!-- 顶部导航栏 -->
+  <view class="nav-header">
+    <view class="nav-back" bindtap="goBack">
+      <text class="back-arrow">‹</text>
+    </view>
+    <text class="nav-title">沥青搅拌站</text>
+    <view class="nav-placeholder"></view>
+  </view>
+
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-inner">
+      <text class="search-icon">🔍</text>
+      <input
+        class="search-input"
+        placeholder="搜索拌站名称或地址"
+        placeholder-style="color:#999"
+        value="{{keyword}}"
+        bindinput="onSearchInput"
+        bindconfirm="doSearch"
+      />
+      <text wx:if="{{keyword}}" class="search-clear" bindtap="clearSearch">✕</text>
+    </view>
+  </view>
+
+  <!-- 拌站列表 -->
+  <view class="station-list">
+
+    <view
+      wx:for="{{filteredStations}}"
+      wx:key="id"
+      class="station-card"
+      bindtap="onStationTap"
+      data-id="{{item.id}}"
+    >
+      <!-- 顶部图片 -->
+      <view class="station-img-wrap">
+        <image
+          class="station-img"
+          src="{{item.image}}"
+          mode="aspectFill"
+          binderror="onImgError"
+        />
+        <view wx:if="{{item.status}}" class="station-status {{item.statusClass}}">
+          <text>{{item.status}}</text>
+        </view>
+      </view>
+
+      <!-- 信息区 -->
+      <view class="station-info">
+        <view class="station-name-row">
+          <text class="station-name">{{item.name}}</text>
+          <view wx:if="{{item.distance}}" class="distance-tag">
+            <text>{{item.distance}}</text>
+          </view>
+        </view>
+        <view class="station-address">
+          <text class="addr-icon">📍</text>
+          <text class="addr-text">{{item.address}}</text>
+        </view>
+
+        <!-- 核心信息网格 -->
+        <view class="info-grid">
+          <view class="info-cell">
+            <text class="info-label">生产类型</text>
+            <text class="info-value">{{item.type}}</text>
+          </view>
+          <view class="info-cell">
+            <text class="info-label">日产量</text>
+            <text class="info-value">{{item.capacity}}</text>
+          </view>
+          <view class="info-cell">
+            <text class="info-label">拌缸容量</text>
+            <text class="info-value">{{item.tankSize}}</text>
+          </view>
+        </view>
+
+        <!-- 标签 -->
+        <view class="station-tags">
+          <text wx:for="{{item.tags}}" wx:key="*this" class="s-tag">{{item}}</text>
+        </view>
+
+        <!-- 底部操作 -->
+        <view class="station-actions">
+          <view class="action-btn" catchtap="onCall" data-phone="{{item.phone}}">
+            <text class="action-icon">📞</text>
+            <text class="action-text">电话咨询</text>
+          </view>
+          <view class="action-btn" catchtap="onNavigate" data-item="{{item}}">
+            <text class="action-icon">🧭</text>
+            <text class="action-text">导航前往</text>
+          </view>
+          <view class="action-btn" catchtap="onStationTap" data-id="{{item.id}}">
+            <text class="action-icon">📋</text>
+            <text class="action-text">查看详情</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{filteredStations.length === 0 && searched}}" class="empty-state">
+    <text class="empty-icon">🔍</text>
+    <text class="empty-text">未找到匹配的拌站</text>
+  </view>
+
+</view>

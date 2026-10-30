@@ -1,0 +1,150 @@
+<!-- pages/diesel-delivery-record/diesel-delivery-record.wxml - 加油车送油记录 -->
+<import src="../../templates/approval-record.wxml" />
+<view class="page">
+  <!-- 筛选区 -->
+  <view class="filter-bar">
+    <picker mode="date" value="{{filterDate}}" bindchange="onDateFilterChange">
+      <view class="filter-pill {{filterDate ? 'active' : ''}}">
+        {{filterDate || '全部日期'}}
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+    <input class="filter-input" placeholder="车牌号" value="{{filterPlateNumber}}" bindinput="onPlateNumberInput" adjust-position="{{true}}" />
+    <input class="filter-input" placeholder="司机" value="{{filterDriver}}" bindinput="onDriverInput" adjust-position="{{true}}" />
+    <view class="filter-pill reset" bindtap="onResetFilter">重置</view>
+  </view>
+
+  <!-- 统计 -->
+  <view class="stat-bar">
+    <text class="stat-text">共 {{totalCount}} 条送油记录</text>
+  </view>
+
+  <!-- 记录列表 -->
+  <scroll-view scroll-y class="record-list" bindscrolltolower="loadMore" lower-threshold="100">
+    <block wx:for="{{recordList}}" wx:key="_id">
+      <view class="record-card">
+        <!-- 卡片头部 -->
+        <view class="card-header">
+          <text class="card-title">{{item.projectLocation || '项目地点'}}</text>
+          <view class="card-meta">
+            <text class="approval-tag {{item.statusClass}}">{{item.statusLabel}}</text>
+            <text class="card-date">{{item.date}}</text>
+          </view>
+        </view>
+
+        <!-- 加油车车牌号 -->
+        <view class="card-row">
+          <text class="row-label">加油车车牌号</text>
+          <text class="row-value">{{item.plateNumber || '-'}}</text>
+        </view>
+
+        <!-- 设备数量 -->
+        <view class="card-row">
+          <text class="row-label">设备数量</text>
+          <text class="row-value">{{item.equipmentList ? item.equipmentList.length : 0}} 台</text>
+        </view>
+
+        <!-- 总加油量 -->
+        <view class="card-row">
+          <text class="row-label">总加油量</text>
+          <text class="row-value highlight">{{item.totalVolume || '0'}} 升</text>
+        </view>
+
+        <!-- 加油司机 -->
+        <view class="card-row">
+          <text class="row-label">加油司机</text>
+          <text class="row-value">{{item.driver || '-'}}</text>
+        </view>
+        <view class="card-row" wx:if="{{item.approvalStatus === 'rejected' && item.approvalRemark}}">
+          <text class="row-label">拒绝原因</text>
+          <text class="row-value">{{item.approvalRemark}}</text>
+        </view>
+
+        <!-- 提交时间 -->
+        <view class="card-row card-row-time">
+          <text class="row-label">提交时间</text>
+          <text class="row-value time">{{item.submitTimeStr}}</text>
+        </view>
+        <template is="approvalTimeline" data="{{timeline: item.approvalTimeline}}" />
+
+        <view class="detail-toggle" bindtap="toggleDetail" data-id="{{item._id}}">
+          <text>{{item.expanded ? '收起详情' : '查看详情'}}</text>
+          <text class="detail-arrow">{{item.expanded ? '▲' : '▼'}}</text>
+        </view>
+
+        <view class="detail-panel" wx:if="{{item.expanded}}">
+          <view class="detail-row">
+            <text class="detail-label">送油日期</text>
+            <text class="detail-value">{{item.date || '-'}}</text>
+          </view>
+          <view class="detail-row">
+            <text class="detail-label">加油车车牌号</text>
+            <text class="detail-value">{{item.plateNumber || '-'}}</text>
+          </view>
+          <view class="detail-row">
+            <text class="detail-label">项目地点</text>
+            <text class="detail-value">{{item.projectLocation || '-'}}</text>
+          </view>
+          <view class="detail-row">
+            <text class="detail-label">加油司机</text>
+            <text class="detail-value">{{item.driver || '-'}}</text>
+          </view>
+          <view class="detail-row">
+            <text class="detail-label">总加油量</text>
+            <text class="detail-value highlight">{{item.totalVolume || '0'}} 升</text>
+          </view>
+          <view class="detail-row">
+            <text class="detail-label">备注</text>
+            <text class="detail-value">{{item.remark || '-'}}</text>
+          </view>
+
+          <view class="detail-section-title">设备加油明细</view>
+          <view class="equipment-card" wx:for="{{item.equipmentList}}" wx:key="index" wx:for-item="equipmentItem">
+            <view class="equipment-title">设备 {{index + 1}}</view>
+            <view class="detail-row compact">
+              <text class="detail-label">设备名称/编号</text>
+              <text class="detail-value">{{equipmentItem.equipment || '-'}}</text>
+            </view>
+            <view class="detail-row compact">
+              <text class="detail-label">加油升数</text>
+              <text class="detail-value highlight">{{equipmentItem.volume || '0'}} 升</text>
+            </view>
+            <view class="image-row">
+              <text class="detail-label">加油图片</text>
+              <view wx:if="{{equipmentItem.image && equipmentItem.image.length}}" class="detail-image-list">
+                <image
+                  wx:for="{{equipmentItem.image}}"
+                  wx:key="*this"
+                  wx:for-item="imageUrl"
+                  class="detail-image"
+                  src="{{imageUrl}}"
+                  mode="aspectFill"
+                  bindtap="previewImage"
+                  data-url="{{imageUrl}}"
+                  data-urls="{{equipmentItem.image}}"
+                />
+              </view>
+              <text wx:else class="detail-value">-</text>
+            </view>
+          </view>
+          <view class="empty-detail" wx:if="{{!item.equipmentList || item.equipmentList.length === 0}}">
+            暂无设备明细
+          </view>
+        </view>
+
+        <view wx:if="{{item.canEdit}}" class="record-actions">
+          <button class="edit-btn" bindtap="onEdit" data-id="{{item._id}}">修改表单</button>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view wx:if="{{!loading && recordList.length === 0}}" class="empty">
+      <text>暂无送油记录</text>
+    </view>
+
+    <!-- 加载更多 -->
+    <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+    <view wx:if="{{noMore && recordList.length > 0}}" class="loading-tip">— 已加载全部 —</view>
+  </scroll-view>
+</view>

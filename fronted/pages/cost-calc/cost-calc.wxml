@@ -1,0 +1,67 @@
+<import src="../../templates/approval-selector.wxml" />
+<!--pages/cost-calc/cost-calc.wxml-->
+<view class="container">
+  <view class="title">调价单</view>
+
+  <!-- 查看记录入口 -->
+  <view class="record-link" bindtap="goToRecord">查看调价记录 ></view>
+
+  <!-- 所属站点 -->
+  <view class="form-group">
+    <view class="form-item">
+      <text class="label">所属站点</text>
+      <picker mode="selector" range="{{stationList}}" range-key="stationName" bindchange="onStationChange">
+        <view class="picker {{stationIndex >= 0 ? 'selected' : ''}}">
+          {{stationIndex >= 0 ? stationList[stationIndex].stationName : '请选择站点'}}
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 调价时间 -->
+  <view class="form-group">
+    <view class="form-item">
+      <text class="label">调价时间</text>
+      <picker mode="date" value="{{TJtime}}" bindchange="onTimeChange">
+        <view class="picker {{TJtime ? 'selected' : ''}}">
+          {{TJtime || '请选择时间'}}
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 调价产品 -->
+  <view class="form-group">
+    <view class="form-item">
+      <text class="label">调价产品</text>
+      <picker mode="selector" range="{{productList}}" range-key="productName" bindchange="onProductChange">
+        <view class="picker {{productIndex >= 0 ? 'selected' : ''}}">
+          {{productIndex >= 0 ? productList[productIndex].productName : '请选择产品'}}
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 本次价格 -->
+  <view class="form-group">
+    <view class="form-item">
+      <text class="label">本次价格</text>
+      <input class="input" placeholder="请输入本次价格" value="{{newPrice}}" bindinput="onNewPriceInput"/>
+    </view>
+  </view>
+
+  <!-- 调价情况 -->
+  <view class="form-group">
+    <view class="form-item">
+      <text class="label">调价情况</text>
+      <input class="input" placeholder="请输入调价情况" value="{{TJReason}}" bindinput="onReasonInput"/>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="btn-area">
+    <view wx:if="{{!editMode}}" class="btn-draft" bindtap="onSaveDraft">暂存草稿</view>
+    <view class="btn-submit" bindtap="onSubmit">{{editMode ? '提交修改' : '提交表单'}}</view>
+  </view>
+  <template is="approvalSelector" data="{{approvalSelector: approvalSelector}}" />
+</view>

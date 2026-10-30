@@ -1,0 +1,335 @@
+/* 沥青搅拌站 - 列表页高级感升级版 */
+
+.stations-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f8f9fc 0%, #eef1f7 100%);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 顶部导航栏升级 */
+.nav-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 88rpx;
+  padding: 0 24rpx;
+  background: var(--bg-card);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+  border-bottom: 1rpx solid var(--border-light);
+}
+
+.nav-back {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+}
+
+.nav-back:active {
+  background: var(--bg-subtle);
+}
+
+.back-arrow {
+  font-size: 48rpx;
+  color: var(--text-primary);
+  font-weight: 300;
+  line-height: 1;
+}
+
+.nav-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.3rpx;
+}
+
+.nav-placeholder {
+  width: 64rpx;
+}
+
+/* 搜索栏升级 */
+.search-bar {
+  padding: 24rpx 32rpx;
+  background: var(--bg-card);
+}
+
+.search-inner {
+  display: flex;
+  align-items: center;
+  background: var(--bg-subtle);
+  border-radius: var(--radius-xl);
+  padding: 18rpx 26rpx;
+  height: 76rpx;
+  box-sizing: border-box;
+  border: 1rpx solid transparent;
+  transition: var(--transition-smooth);
+}
+
+.search-inner:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4rpx var(--primary-glow);
+}
+
+.search-icon {
+  font-size: 30rpx;
+  margin-right: 14rpx;
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.search-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: var(--text-primary);
+  height: 40rpx;
+}
+
+.search-clear {
+  font-size: 30rpx;
+  color: var(--text-light);
+  padding: 10rpx;
+  flex-shrink: 0;
+  transition: var(--transition-fast);
+}
+
+.search-clear:active {
+  color: var(--text-muted);
+}
+
+/* 拌站列表升级 */
+.station-list {
+  padding: 24rpx;
+}
+
+/* 拌站卡片升级 */
+.station-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  margin-bottom: 28rpx;
+  box-shadow: var(--shadow-md);
+  border: 1rpx solid var(--border-light);
+  transition: var(--transition-smooth);
+  position: relative;
+}
+
+.station-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1rpx;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  z-index: 1;
+}
+
+.station-card:active {
+  transform: scale(0.99);
+}
+
+/* 顶部图片升级 */
+.station-img-wrap {
+  width: 100%;
+  height: 340rpx;
+  position: relative;
+  background: var(--primary-gradient);
+}
+
+.station-img {
+  width: 100%;
+  height: 100%;
+}
+
+.station-status {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  padding: 8rpx 20rpx;
+  border-radius: 30rpx;
+  font-size: 22rpx;
+  color: #ffffff;
+  backdrop-filter: blur(10rpx);
+  font-weight: 600;
+}
+
+.station-status.running {
+  background: rgba(16, 185, 129, 0.85);
+  box-shadow: 0 4rpx 16rpx rgba(16, 185, 129, 0.3);
+}
+
+.station-status.maintenance {
+  background: rgba(245, 158, 11, 0.85);
+  box-shadow: 0 4rpx 16rpx rgba(245, 158, 11, 0.3);
+}
+
+.station-status.stopped {
+  background: rgba(239, 68, 68, 0.85);
+  box-shadow: 0 4rpx 16rpx rgba(239, 68, 68, 0.3);
+}
+
+/* 信息区升级 */
+.station-info {
+  padding: 28rpx;
+}
+
+.station-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14rpx;
+}
+
+.station-name {
+  font-size: 36rpx;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.3rpx;
+}
+
+.distance-tag {
+  background: linear-gradient(135deg, rgba(26, 92, 240, 0.1), rgba(74, 138, 255, 0.15));
+  color: var(--primary);
+  font-size: 22rpx;
+  padding: 8rpx 18rpx;
+  border-radius: 30rpx;
+  font-weight: 600;
+  border: 1rpx solid rgba(26, 92, 240, 0.12);
+}
+
+/* 地址升级 */
+.station-address {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 22rpx;
+}
+
+.addr-icon {
+  font-size: 28rpx;
+  margin-right: 10rpx;
+  flex-shrink: 0;
+  margin-top: 2rpx;
+  color: var(--primary);
+}
+
+.addr-text {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  flex: 1;
+}
+
+/* 信息网格升级 */
+.info-grid {
+  display: flex;
+  background: var(--bg-subtle);
+  border-radius: var(--radius-md);
+  padding: 18rpx 0;
+  margin-bottom: 18rpx;
+  border: 1rpx solid var(--border-light);
+}
+
+.info-cell {
+  flex: 1;
+  text-align: center;
+  border-right: 1rpx solid var(--border-light);
+}
+
+.info-cell:last-child {
+  border-right: none;
+}
+
+.info-label {
+  display: block;
+  font-size: 22rpx;
+  color: var(--text-muted);
+  margin-bottom: 8rpx;
+  font-weight: 500;
+}
+
+.info-value {
+  display: block;
+  font-size: 28rpx;
+  color: var(--text-primary);
+  font-weight: 700;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 标签升级 */
+.station-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14rpx;
+  margin-bottom: 22rpx;
+}
+
+.s-tag {
+  font-size: 22rpx;
+  color: var(--primary);
+  background: linear-gradient(135deg, rgba(26, 92, 240, 0.08), rgba(74, 138, 255, 0.12));
+  padding: 8rpx 18rpx;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  border: 1rpx solid rgba(26, 92, 240, 0.12);
+}
+
+/* 底部操作升级 */
+.station-actions {
+  display: flex;
+  border-top: 1rpx solid var(--border-light);
+  padding-top: 22rpx;
+  margin-top: 4rpx;
+}
+
+.action-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  padding: 12rpx;
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+}
+
+.action-btn:active {
+  background: var(--bg-subtle);
+}
+
+.action-icon {
+  font-size: 40rpx;
+}
+
+.action-text {
+  font-size: 22rpx;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* 空状态升级 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 160rpx 0;
+}
+
+.empty-icon {
+  font-size: 100rpx;
+  margin-bottom: 28rpx;
+  opacity: 0.4;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: var(--text-muted);
+}

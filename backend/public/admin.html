@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>广东远大集团管理后台</title>
+  <link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+  <main class="login-page" id="loginPanel">
+    <section class="login-card">
+      <div class="brand-badge">远大</div>
+      <h1>广东远大集团</h1>
+      <p>企业小程序运营管理后台</p>
+      <label>账号<input id="username" placeholder="请输入账号" autocomplete="username"></label>
+      <label>密码<input id="password" placeholder="请输入密码" type="password" autocomplete="current-password"></label>
+      <button class="btn primary full" id="loginBtn">登录</button>
+      <p class="message" id="loginMsg"></p>
+    </section>
+  </main>
+
+  <main class="admin-layout hidden" id="appPanel">
+    <aside class="sidebar">
+      <div class="side-head">
+        <div class="brand-badge small">远大</div>
+        <div>
+          <strong>管理后台</strong>
+          <span>数据管理</span>
+        </div>
+      </div>
+      <div class="nav-groups" id="tabs"></div>
+    </aside>
+
+    <section class="workspace">
+      <header class="topbar">
+        <div>
+          <h1 id="pageTitle">产品</h1>
+          <p id="pageDesc">产品服务与分类维护</p>
+        </div>
+        <div class="top-actions">
+          <span class="status-pill" id="statusText">接口状态</span>
+          <button class="btn subtle" id="logoutBtn">退出</button>
+        </div>
+      </header>
+
+      <section class="summary-grid" id="summaryGrid"></section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 id="tableTitle">数据列表</h2>
+            <p id="tableSubtitle">查看、搜索和编辑当前集合记录</p>
+          </div>
+          <div class="toolbar">
+            <label class="search-box">
+              <span>搜索</span>
+              <input id="searchInput" placeholder="关键词筛选">
+            </label>
+            <button class="btn subtle" id="refreshBtn">刷新</button>
+            <button class="btn primary" id="newBtn">新增记录</button>
+          </div>
+        </div>
+
+        <div class="table-shell">
+          <table>
+            <thead><tr id="thead"></tr></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+          <div class="empty-state hidden" id="emptyState">
+            <strong>暂无数据</strong>
+            <span>可以点击右上角新增记录。</span>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="editor">
+    <form method="dialog" class="editor-form">
+      <div class="editor-head">
+        <div>
+          <h2 id="editorTitle">编辑记录</h2>
+          <p>以结构化数据形式保存，适合当前小程序的灵活表单数据。</p>
+        </div>
+        <button class="icon-btn" value="cancel" aria-label="关闭">×</button>
+      </div>
+      <div class="form-grid" id="fieldEditor"></div>
+      <p class="message" id="editorMsg"></p>
+      <menu>
+        <button class="btn subtle" value="cancel">取消</button>
+        <button class="btn primary" id="saveBtn" value="default">保存</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog id="approvalDialog" class="approval-dialog">
+    <form method="dialog" class="approval-form">
+      <div class="editor-head">
+        <div>
+          <h2 id="approvalTitle">审批记录</h2>
+          <p id="approvalDesc">请确认本次审批操作。</p>
+        </div>
+        <button class="icon-btn" value="cancel" aria-label="关闭">×</button>
+      </div>
+      <label class="field-editor approval-remark" id="approvalRemarkField">
+        <span>拒绝原因</span>
+        <textarea id="approvalRemark" placeholder="可留空"></textarea>
+      </label>
+      <p class="message" id="approvalMsg"></p>
+      <menu>
+        <button class="btn subtle" value="cancel">取消</button>
+        <button class="btn primary" id="approvalSubmitBtn" value="default">确定</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog id="deleteDialog" class="approval-dialog">
+    <form method="dialog" class="approval-form">
+      <div class="editor-head">
+        <div>
+          <h2>删除记录</h2>
+          <p>删除后记录会标记为已删除，并保留删除原因。</p>
+        </div>
+        <button class="icon-btn" value="cancel" aria-label="关闭">×</button>
+      </div>
+      <label class="field-editor approval-remark">
+        <span>删除原因</span>
+        <textarea id="deleteReason" placeholder="请输入删除原因"></textarea>
+      </label>
+      <p class="message" id="deleteMsg"></p>
+      <menu>
+        <button class="btn subtle" value="cancel">取消</button>
+        <button class="btn primary" id="deleteSubmitBtn" value="default">确定删除</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <script src="/admin.js"></script>
+</body>
+</html>

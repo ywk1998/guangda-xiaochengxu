@@ -1,0 +1,106 @@
+<import src="../../templates/approval-selector.wxml" />
+<!-- pages/diesel-out/diesel-out.wxml - 站点柴油领用表 -->
+<view class="page-diesel">
+
+  <!-- 顶部标题 -->
+  <view class="diesel-header">
+    <text class="diesel-header-title">站点柴油领用表</text>
+    <text class="header-record-link" bindtap="goToRecord">查看记录 ></text>
+  </view>
+
+  <!-- ===== 领用信息表单 ===== -->
+  <view class="section-card">
+    <!-- 领用日期 -->
+    <view class="form-row">
+      <text class="form-label required">领用日期</text>
+      <picker mode="date" value="{{form.date}}" bindchange="onDateChange">
+        <view class="picker-val {{form.date ? '' : 'placeholder'}}">
+          {{form.date || '请选择日期'}}
+        </view>
+      </picker>
+    </view>
+    <view class="divider"></view>
+
+    <!-- 领用拌站点 -->
+    <view class="form-row">
+      <text class="form-label required">领用拌站点</text>
+      <picker mode="selector" range="{{stationOptions}}" range-key="name" bindchange="onStationChange">
+        <view class="picker-val {{form.station ? '' : 'placeholder'}}">
+          {{form.station || '请选择拌站点'}}
+        </view>
+      </picker>
+    </view>
+    <view class="divider"></view>
+
+    <!-- 领用油罐 -->
+    <view class="form-row">
+      <text class="form-label">领用油罐</text>
+      <input class="form-input" placeholder="请输入油罐编号" value="{{form.tankNumber}}" bindinput="onInput" data-field="tankNumber" adjust-position="{{true}}" />
+    </view>
+    <view class="divider"></view>
+
+    <!-- 领用类型 -->
+    <view class="form-row">
+      <text class="form-label required">领用类型</text>
+      <picker mode="selector" range="{{typeOptions}}" bindchange="onTypeChange">
+        <view class="picker-val {{form.type ? '' : 'placeholder'}}">
+          {{form.type || '请选择领用类型'}}
+        </view>
+      </picker>
+    </view>
+    <view class="divider"></view>
+
+    <!-- 设备编号/车辆牌号 -->
+    <view class="form-row">
+      <text class="form-label">设备编号/车辆牌号</text>
+      <input class="form-input" placeholder="请输入编号或牌号" value="{{form.equipment}}" bindinput="onInput" data-field="equipment" adjust-position="{{true}}" />
+    </view>
+    <view class="divider"></view>
+
+    <!-- 领用升数 -->
+    <view class="form-row">
+      <text class="form-label required">领用升数</text>
+      <input class="form-input" placeholder="请输入升数" value="{{form.volume}}" bindinput="onInput" data-field="volume" adjust-position="{{true}}" />
+      <text class="form-unit">升</text>
+    </view>
+    <view class="divider"></view>
+
+    <!-- 领用车司机 -->
+    <view class="form-row">
+      <text class="form-label">领用车司机</text>
+      <input class="form-input" placeholder="请输入司机姓名" value="{{form.driver}}" bindinput="onInput" data-field="driver" adjust-position="{{true}}" />
+    </view>
+    <view class="divider"></view>
+
+    <!-- 领用图片 -->
+    <view class="form-row image-row">
+      <text class="form-label">领用图片</text>
+      <view class="img-upload-area">
+        <view class="image-item" wx:for="{{form.image}}" wx:key="*this">
+          <image class="upload-preview" src="{{item}}" mode="aspectFill" bindtap="previewImage" data-url="{{item}}" />
+          <view class="image-delete" catchtap="deleteImage" data-index="{{index}}">×</view>
+        </view>
+        <view wx:if="{{form.image.length < 9}}" class="upload-placeholder" bindtap="onUploadImage">
+          <text class="upload-icon">+</text>
+          <text class="upload-text">上传图片</text>
+        </view>
+      </view>
+    </view>
+    <view class="divider"></view>
+
+    <!-- 备注 -->
+    <view class="form-row-col">
+      <text class="form-label">备注</text>
+      <textarea class="form-textarea" placeholder="请输入备注信息..." value="{{form.remark}}" bindinput="onInput" data-field="remark" adjust-position="{{true}}" />
+    </view>
+  </view>
+
+  <!-- ===== 提交按钮 ===== -->
+  <view class="submit-area">
+    <view class="btn-draft" bindtap="saveDraft">暂存草稿</view>
+    <view class="btn-submit" bindtap="submitForm">提交领用</view>
+  </view>
+
+  <view style="height: 60rpx;"></view>
+  <template is="approvalSelector" data="{{approvalSelector: approvalSelector}}" />
+</view>

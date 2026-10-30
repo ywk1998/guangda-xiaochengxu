@@ -1,0 +1,169 @@
+<!-- pages/product-detail/product-detail.wxml - 产品详情页（高级感重设计）-->
+<view class="page-pd">
+
+  <!-- ===== 顶部轮播图（优先本地图片，cdn无图时兜底） ===== -->
+  <view class="hero">
+    <swiper
+      class="hero-swiper"
+      indicator-dots="{{false}}"
+      autoplay="{{true}}"
+      interval="{{5000}}"
+      circular="{{true}}"
+      bindchange="onSwiperChange"
+    >
+      <!-- 优先展示本地图片 -->
+      <swiper-item wx:for="{{localImages}}" wx:key="*this">
+        <image
+          class="hero-img"
+          src="{{item}}"
+          mode="aspectFill"
+          bindtap="onPreviewImage"
+          data-src="{{item}}"
+        />
+      </swiper-item>
+
+      <!-- 若云端有图片且本地为空，展示云端图片 -->
+      <swiper-item wx:for="{{heroImages}}" wx:key="*this" wx:if="{{localImages.length === 0}}">
+        <image
+          class="hero-img"
+          src="{{item}}"
+          mode="aspectFill"
+          bindtap="onPreviewImage"
+          data-src="{{item}}"
+        />
+      </swiper-item>
+
+      <!-- 无图片兜底 -->
+      <swiper-item wx:if="{{localImages.length === 0 && heroImages.length === 0}}">
+        <view class="hero-fallback">
+          <text class="hero-fallback-icon">🚛</text>
+          <text class="hero-fallback-text">{{product.name}}</text>
+        </view>
+      </swiper-item>
+    </swiper>
+
+    <!-- 自定义指示器 -->
+    <view class="hero-dots" wx:if="{{localImages.length > 1}}">
+      <view
+        wx:for="{{localImages}}"
+        wx:key="*this"
+        class="hero-dot {{swiperCurrent === index ? 'active' : ''}}"
+      />
+    </view>
+
+    <!-- 返回按钮 -->
+    <view class="hero-back" bindtap="onBack">
+      <text class="hero-back-icon">←</text>
+    </view>
+
+    <!-- 底部产品名称浮层 -->
+    <view class="hero-overlay">
+      <view class="hero-tags" wx:if="{{product.tags && product.tags.length > 0}}">
+        <text
+          class="hero-tag"
+          wx:for="{{product.tags}}"
+          wx:key="*this"
+        >{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 产品内容区（从轮播图下方开始，不重叠） ===== -->
+  <view class="content">
+
+    <!-- 产品名称 + 分类 -->
+    <view class="content-header card">
+      <view class="header-top">
+        <view class="header-icon-wrap">
+          <image wx:if="{{product.icon}}" class="header-icon" src="{{product.icon}}" mode="aspectFit" />
+        </view>
+        <view class="header-info">
+          <text class="header-name">{{product.name}}</text>
+          <text class="header-category">{{product._displayCategory || '产品服务'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 产品简介 -->
+    <view class="content-card card">
+      <view class="card-title-row">
+        <view class="card-dot" style="background: #1a5cf0;"></view>
+        <text class="card-title">产品简介</text>
+      </view>
+      <text class="card-text">{{product.desc}}</text>
+    </view>
+
+    <!-- 详细介绍 -->
+    <view class="content-card card" wx:if="{{product.detail}}">
+      <view class="card-title-row">
+        <view class="card-dot" style="background: #27ae60;"></view>
+        <text class="card-title">详细介绍</text>
+      </view>
+      <text class="card-text detail-text">{{product.detail}}</text>
+    </view>
+
+    <!-- 核心优势 -->
+    <view class="content-card card" wx:if="{{product.features && product.features.length > 0}}">
+      <view class="card-title-row">
+        <view class="card-dot" style="background: #e67e22;"></view>
+        <text class="card-title">核心优势</text>
+      </view>
+      <view class="features-list">
+        <view
+          class="feature-item"
+          wx:for="{{product.features}}"
+          wx:key="title"
+        >
+          <view class="feature-icon-wrap">
+            <text class="feature-icon">{{item.icon || '✅'}}</text>
+          </view>
+          <view class="feature-info">
+            <text class="feature-title">{{item.title}}</text>
+            <text class="feature-desc">{{item.desc}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 应用案例 -->
+    <view class="content-card card" wx:if="{{product.cases && product.cases.length > 0}}">
+      <view class="card-title-row">
+        <view class="card-dot" style="background: #8e44ad;"></view>
+        <text class="card-title">应用案例</text>
+      </view>
+      <view class="cases-list">
+        <view
+          class="case-item"
+          wx:for="{{product.cases}}"
+          wx:key="name"
+          bindtap="onPreviewCase"
+          data-img="{{item.image}}"
+        >
+          <image
+            wx:if="{{item.image}}"
+            class="case-img"
+            src="{{item.image}}"
+            mode="aspectFill"
+          />
+          <view class="case-info">
+            <text class="case-name">{{item.name}}</text>
+            <text class="case-desc" wx:if="{{item.desc}}">{{item.desc}}</text>
+          </view>
+          <text class="case-arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部留白（给固定栏让位） -->
+    <view class="content-bottom-space"></view>
+  </view>
+
+  <!-- ===== 底部联系栏 ===== -->
+  <view class="bottom-bar safe-area-inset-bottom">
+    <button class="btn-consult" bindtap="onConsult">
+      <text class="btn-consult-icon">📞</text>
+      <text class="btn-consult-text">联系咨询</text>
+    </button>
+  </view>
+
+</view>

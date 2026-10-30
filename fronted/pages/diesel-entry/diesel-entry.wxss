@@ -1,0 +1,266 @@
+/* pages/diesel-entry/diesel-entry.wxss - 拌站柴油入库表 */
+
+.page-diesel {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f8f9fc 0%, #eef1f7 100%);
+}
+
+/* ===== 顶部标题 ===== */
+.diesel-header {
+  background: linear-gradient(135deg, #e67e22 0%, #f39c12 50%, #f1c40f 100%);
+  padding: 50rpx 32rpx 40rpx;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.diesel-header::before {
+  content: '';
+  position: absolute;
+  top: -80rpx;
+  right: -80rpx;
+  width: 280rpx;
+  height: 280rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.diesel-header::after {
+  content: '';
+  position: absolute;
+  bottom: -40rpx;
+  left: -40rpx;
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.diesel-header-title {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 4rpx;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+}
+
+.header-record-link {
+  display: block;
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  margin-top: 16rpx;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== 卡片 ===== */
+.section-card {
+  background: #ffffff;
+  border-radius: 20rpx;
+  margin: 0 32rpx 24rpx;
+  padding: 0 32rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+  border: 1rpx solid #e8eaf0;
+  overflow: hidden;
+}
+
+/* ===== 表单行 ===== */
+.form-row {
+  display: flex;
+  align-items: center;
+  padding: 28rpx 0;
+  min-height: 88rpx;
+  box-sizing: border-box;
+}
+
+.form-row-col {
+  display: flex;
+  flex-direction: column;
+  padding: 24rpx 0;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+  min-width: 180rpx;
+  flex-shrink: 0;
+}
+
+.form-label.required::after {
+  content: '*';
+  color: #e74c3c;
+  margin-left: 6rpx;
+}
+
+.form-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+  text-align: right;
+  padding: 0;
+  background: transparent;
+}
+
+.form-unit {
+  font-size: 26rpx;
+  color: #999;
+  margin-left: 8rpx;
+  flex-shrink: 0;
+}
+
+.picker-val {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+  text-align: right;
+}
+
+.picker-val.placeholder {
+  color: #bbb;
+}
+
+.amount-display {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.amount-value {
+  font-size: 32rpx;
+  color: #e67e22;
+  font-weight: 700;
+}
+
+.divider {
+  height: 1rpx;
+  background: #f0f0f0;
+  margin: 0;
+}
+
+/* ===== 文本域 ===== */
+.form-textarea {
+  width: 100%;
+  min-height: 120rpx;
+  font-size: 28rpx;
+  color: #333;
+  background: #f9f9f9;
+  border-radius: 12rpx;
+  padding: 16rpx 20rpx;
+  margin-top: 12rpx;
+  box-sizing: border-box;
+  line-height: 1.6;
+}
+
+/* ===== 图片上传 ===== */
+.img-upload-area {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.image-row {
+  align-items: flex-start;
+}
+
+.image-item {
+  position: relative;
+  width: 120rpx;
+  height: 120rpx;
+  flex-shrink: 0;
+}
+
+.upload-placeholder {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 12rpx;
+  border: 2rpx dashed #ddd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+}
+
+.upload-icon {
+  font-size: 40rpx;
+  color: #bbb;
+  line-height: 1;
+}
+
+.upload-text {
+  font-size: 20rpx;
+  color: #bbb;
+  margin-top: 4rpx;
+}
+
+.upload-preview {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 12rpx;
+}
+
+.image-delete {
+  position: absolute;
+  top: -10rpx;
+  right: -10rpx;
+  width: 34rpx;
+  height: 34rpx;
+  line-height: 34rpx;
+  text-align: center;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.58);
+  color: #fff;
+  font-size: 26rpx;
+}
+
+/* ===== 提交按钮 ===== */
+.submit-area {
+  display: flex;
+  gap: 20rpx;
+  margin: 24rpx 32rpx;
+}
+
+.btn-submit {
+  flex: 2;
+  background: linear-gradient(135deg, #e67e22, #f39c12);
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: 600;
+  text-align: center;
+  padding: 26rpx 0;
+  border-radius: 50rpx;
+  box-shadow: 0 8rpx 24rpx rgba(230, 126, 34, 0.35);
+  letter-spacing: 2rpx;
+}
+
+.btn-submit:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+.btn-draft {
+  flex: 1;
+  background: #ffffff;
+  color: #e67e22;
+  font-size: 32rpx;
+  font-weight: 600;
+  text-align: center;
+  padding: 26rpx 0;
+  border-radius: 50rpx;
+  border: 2rpx solid #e67e22;
+  letter-spacing: 2rpx;
+}
+
+.btn-draft:active {
+  transform: scale(0.98);
+  opacity: 0.8;
+}

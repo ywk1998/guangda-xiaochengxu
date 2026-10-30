@@ -1,0 +1,38 @@
+<template name="approvalSelector">
+  <view class="approval-selector" wx:if="{{approvalSelector.visible}}">
+    <view class="selector-nav">
+      <view class="selector-nav-btn" bindtap="closeApprovalSelector">‹</view>
+      <view class="selector-title">{{approvalSelector.title}}</view>
+      <view class="selector-nav-btn" bindtap="closeApprovalSelector">×</view>
+    </view>
+    <view class="selector-search">
+      <text class="selector-search-icon">⌕</text>
+      <input
+        class="selector-search-input"
+        placeholder="搜索"
+        value="{{approvalSelector.keyword}}"
+        bindinput="onApprovalSelectorSearch"
+        confirm-type="search"
+      />
+    </view>
+    <view class="selector-tab">用户</view>
+    <scroll-view scroll-y class="selector-scroll">
+      <view
+        class="selector-user"
+        wx:for="{{approvalSelector.filteredApprovers}}"
+        wx:key="openid"
+        bindtap="toggleApprovalSelectorUser"
+        data-openid="{{item.openid}}"
+      >
+        <view class="selector-avatar">用户</view>
+        <view class="selector-name">{{item.name}}</view>
+        <view class="selector-check {{item.checked ? 'active' : ''}}">{{item.checked ? '✓' : ''}}</view>
+      </view>
+      <view class="selector-empty" wx:if="{{approvalSelector.filteredApprovers.length === 0}}">暂无可选用户</view>
+    </scroll-view>
+    <view class="selector-footer">
+      <text class="selector-count">已选择 {{approvalSelector.selectedCount}} 人</text>
+      <button class="selector-confirm" bindtap="confirmApprovalSelector">确定</button>
+    </view>
+  </view>
+</template>

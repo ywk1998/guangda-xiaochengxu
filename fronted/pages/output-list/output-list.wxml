@@ -1,0 +1,189 @@
+<import src="../../templates/approval-selector.wxml" />
+<!-- pages/output-list/output-list.wxml - 拌站出料表列表页 -->
+<view class="output-page">
+
+  <!-- 统计卡片 -->
+  <view class="stats-card single">
+    <view class="stat-item">
+      <text class="stat-value">{{stats.totalOutputText || '0.00'}}</text>
+      <text class="stat-label">合计重量(吨)</text>
+    </view>
+  </view>
+
+  <!-- 筛选栏 -->
+  <view class="filter-bar">
+    <view class="filter-item">
+      <input class="filter-input" placeholder="搜索项目/物料" value="{{searchText}}" bindinput="onSearchInput" />
+    </view>
+    <view class="filter-item" bindtap="goToApproval">
+      <text class="filter-btn approval">审批</text>
+    </view>
+    <view class="filter-item" bindtap="showAddModal">
+      <text class="filter-btn">+ 新增</text>
+    </view>
+  </view>
+
+  <!-- 出料记录列表 -->
+  <scroll-view scroll-y class="record-list" bindscrolltolower="loadMore">
+    <view class="record-card" wx:for="{{filteredRecords}}" wx:key="id" bindtap="onRecordTap" data-id="{{item.id}}">
+      <view class="record-header">
+        <text class="record-date">{{item.date}}</text>
+        <view class="record-badges">
+          <text class="approval-tag {{item.approvalClass}}">{{item.approvalLabel}}</text>
+          <text class="record-category">{{item.category}}</text>
+        </view>
+      </view>
+      
+      <view class="record-body">
+        <view class="record-row">
+          <text class="record-label">所属站点</text>
+          <text class="record-value">{{item.station || '-'}}</text>
+        </view>
+        <view class="record-row">
+          <text class="record-label">项目名称</text>
+          <text class="record-value">{{item.projectName}}</text>
+        </view>
+        <view class="record-row">
+          <text class="record-label">物料明细</text>
+          <text class="record-value">{{item.materialSummary}}</text>
+        </view>
+        <view class="record-row primary">
+          <text class="record-label">合计重量</text>
+          <text class="record-value highlight">{{item.totalWeightText}} {{item.unit}}</text>
+        </view>
+        <view class="record-row">
+          <text class="record-label">项目累计</text>
+          <text class="record-value">{{item.totalProjectOutputText}} {{item.unit}}</text>
+        </view>
+      </view>
+
+      <view class="record-footer" catchtap="onDeleteRecord" data-id="{{item.id}}">
+        <text class="delete-btn">删除</text>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:if="{{filteredRecords.length === 0 && !loading}}" class="empty-state">
+      <text class="empty-icon">📋</text>
+      <text class="empty-text">暂无出料记录</text>
+      <text class="empty-hint">点击右上角"新增"添加记录</text>
+    </view>
+
+    <!-- 加载状态 -->
+    <view wx:if="{{loading}}" class="loading-state">
+      <text>加载中...</text>
+    </view>
+  </scroll-view>
+
+  <!-- 新增记录弹窗 -->
+  <view class="modal-mask" wx:if="{{showAddModal}}" bindtap="closeModal">
+    <view class="modal-content" catchtap="stopBubble">
+
+      <view class="modal-header">
+        <text class="modal-title">{{editMode ? '修改出料记录' : '新增出料记录'}}</text>
+        <text class="modal-close" bindtap="closeModal">✕</text>
+      </view>
+
+      <scroll-view scroll-y class="modal-body">
+        <view class="form-item">
+          <text class="form-label">类别</text>
+          <input class="form-input" value="{{newRecord.category}}" data-field="category" bindinput="onFormInput" placeholder="如：沥青混合料" />
+        </view>
+
+        <view class="form-item">
+          <text class="form-label">所属站点 *</text>
+          <picker mode="selector" range="{{stationOptions}}" range-key="name" bindchange="onStationChange">
+            <view class="form-input picker-input {{newRecord.station ? '' : 'placeholder'}}">
+              {{newRecord.station || '请选择所属站点'}}
+            </view>
+          </picker>
+        </view>
+
+        <view class="form-item">
+          <text class="form-label">项目/收货名称 *</text>
+          <input class="form-input" value="{{newRecord.projectName}}" data-field="projectName" bindinput="onFormInput" placeholder="请输入项目名称" />
+        </view>
+
+        <view class="form-section-title">物料明细</view>
+        <view class="material-card" wx:for="{{newRecord.materialList}}" wx:for-item="material" wx:for-index="materialIndex" wx:key="materialIndex">
+          <view class="material-card-header">
+            <text class="material-card-title">物料 {{materialIndex + 1}}</text>
+            <text class="material-delete" bindtap="removeMaterial" data-index="{{materialIndex}}">删除</text>
+          </view>
+          <view class="form-item">
+            <text class="form-label">物料名称 *</text>
+            <input class="form-input" value="{{material.name}}" data-index="{{materialIndex}}" data-field="name" bindinput="onMaterialInput" placeholder="请输入物料名称" />
+          </view>
+          <view class="form-item">
+            <text class="form-label">物料重量 *</text>
+            <input class="form-input" value="{{material.weight}}" data-index="{{materialIndex}}" data-field="weight" bindinput="onMaterialInput" placeholder="请输入物料重量" />
+          </view>
+        </view>
+        <view class="add-material-btn" bindtap="addMaterial">+ 添加物料</view>
+
+        <view class="form-item">
+          <text class="form-label">单位</text>
+          <input class="form-input" value="{{newRecord.unit}}" data-field="unit" bindinput="onFormInput" placeholder="吨、方等" />
+        </view>
+
+        <view class="form-section-title">耗材明细</view>
+        <view class="form-row consumable-row">
+          <view class="form-item">
+            <text class="form-label">水</text>
+            <input class="form-input" value="{{newRecord.water}}" data-field="water" bindinput="onFormInput" placeholder="请输入水耗材明细" />
+          </view>
+          <view class="form-item">
+            <text class="form-label">电</text>
+            <input class="form-input" value="{{newRecord.electricity}}" data-field="electricity" bindinput="onFormInput" placeholder="请输入电耗材明细" />
+          </view>
+        </view>
+
+        <view class="form-row consumable-row">
+          <view class="form-item">
+            <text class="form-label">煤</text>
+            <input class="form-input" value="{{newRecord.coal}}" data-field="coal" bindinput="onFormInput" placeholder="请输入煤耗材明细" />
+          </view>
+          <view class="form-item">
+            <text class="form-label">天然气</text>
+            <input class="form-input" value="{{newRecord.naturalGas}}" data-field="naturalGas" bindinput="onFormInput" placeholder="请输入天然气耗材明细" />
+          </view>
+        </view>
+
+        <view class="form-item">
+          <text class="form-label">其他</text>
+          <input class="form-input" value="{{newRecord.otherConsumables}}" data-field="otherConsumables" bindinput="onFormInput" placeholder="请输入其他耗材明细" />
+        </view>
+
+        <view class="form-item">
+          <text class="form-label">备注</text>
+          <textarea class="form-textarea" value="{{newRecord.remark}}" data-field="remark" bindinput="onFormInput" placeholder="备注信息" />
+        </view>
+      </scroll-view>
+
+      <view class="modal-footer">
+        <button class="btn-cancel" bindtap="closeModal">取消</button>
+        <button class="btn-submit" bindtap="submitRecord">{{editMode ? '提交修改' : '提交'}}</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 删除确认弹窗 -->
+  <view class="modal-mask delete-reason-modal" wx:if="{{showDeleteModal}}" bindtap="closeDeleteModal">
+    <view class="modal-content center" catchtap="stopBubble">
+      <view class="modal-header">
+        <text class="modal-title">删除确认</text>
+        <text class="modal-close" bindtap="closeDeleteModal">✕</text>
+      </view>
+      <view class="modal-body center">
+        <text class="form-label">请输入删除原因</text>
+        <textarea class="delete-reason-textarea" value="{{deleteReason}}" bindinput="onDeleteReasonInput" placeholder="请输入删除原因..." />
+        <text class="delete-reason-hint">删除后将记录标记为已删除状态</text>
+      </view>
+      <view class="modal-footer">
+        <button class="btn-cancel" bindtap="closeDeleteModal">取消</button>
+        <button class="btn-submit" bindtap="confirmDelete">确认删除</button>
+      </view>
+    </view>
+  </view>
+  <template is="approvalSelector" data="{{approvalSelector: approvalSelector}}" />
+</view>

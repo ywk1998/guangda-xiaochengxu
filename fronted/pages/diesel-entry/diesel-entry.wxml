@@ -1,0 +1,113 @@
+<import src="../../templates/approval-selector.wxml" />
+<!-- pages/diesel-entry/diesel-entry.wxml - 拌站柴油入库表 -->
+<view class="page-diesel">
+
+  <!-- 顶部标题 -->
+  <view class="diesel-header">
+    <text class="diesel-header-title">拌站柴油入库表</text>
+    <text class="header-record-link" bindtap="goToRecord">查看记录 ></text>
+  </view>
+
+  <!-- ===== 入库信息表单 ===== -->
+  <view class="section-card">
+    <!-- 入库日期 -->
+    <view class="form-row">
+      <text class="form-label required">入库日期</text>
+      <picker mode="date" value="{{form.date}}" bindchange="onDateChange">
+        <view class="picker-val {{form.date ? '' : 'placeholder'}}">
+          {{form.date || '请选择日期'}}
+        </view>
+      </picker>
+    </view>
+    <view class="divider"></view>
+
+    <!-- 入库拌站点 -->
+    <view class="form-row">
+      <text class="form-label required">入库拌站点</text>
+      <picker mode="selector" range="{{stationOptions}}" range-key="name" bindchange="onStationChange">
+        <view class="picker-val {{form.station ? '' : 'placeholder'}}">
+          {{form.station || '请选择拌站点'}}
+        </view>
+      </picker>
+    </view>
+    <view class="divider"></view>
+
+    <!-- 送货车牌号 -->
+    <view class="form-row">
+      <text class="form-label required">送货车牌号</text>
+      <input class="form-input" placeholder="请输入车牌号" value="{{form.plateNumber}}" bindinput="onInput" data-field="plateNumber" adjust-position="{{true}}" />
+    </view>
+    <view class="divider"></view>
+
+    <!-- 到站实收升数 -->
+    <view class="form-row">
+      <text class="form-label required">到站实收升数</text>
+      <input class="form-input" placeholder="请输入升数" value="{{form.volume}}" bindinput="onVolumeChange" data-field="volume" adjust-position="{{true}}" />
+      <text class="form-unit">升</text>
+    </view>
+    <view class="divider"></view>
+
+    <!-- 单价 -->
+    <view class="form-row">
+      <text class="form-label required">单价</text>
+      <input class="form-input" placeholder="请输入单价" value="{{form.price}}" bindinput="onPriceChange" data-field="price" adjust-position="{{true}}" />
+      <text class="form-unit">元/升</text>
+    </view>
+    <view class="divider"></view>
+
+    <!-- 总金额（自动计算） -->
+    <view class="form-row">
+      <text class="form-label">总金额</text>
+      <view class="amount-display">
+        <text class="amount-value">{{totalAmount || '0'}}</text>
+        <text class="form-unit">元</text>
+      </view>
+    </view>
+    <view class="divider"></view>
+
+    <!-- 入库油罐编号 -->
+    <view class="form-row">
+      <text class="form-label">入库油罐编号</text>
+      <input class="form-input" placeholder="请输入油罐编号" value="{{form.tankNumber}}" bindinput="onInput" data-field="tankNumber" adjust-position="{{true}}" />
+    </view>
+    <view class="divider"></view>
+
+    <!-- 经办人 -->
+    <view class="form-row">
+      <text class="form-label">经办人</text>
+      <input class="form-input" placeholder="请输入经办人姓名" value="{{form.handler}}" bindinput="onInput" data-field="handler" adjust-position="{{true}}" />
+    </view>
+    <view class="divider"></view>
+
+    <!-- 入库图片 -->
+    <view class="form-row image-row">
+      <text class="form-label">入库图片</text>
+      <view class="img-upload-area">
+        <view class="image-item" wx:for="{{form.image}}" wx:key="*this">
+          <image class="upload-preview" src="{{item}}" mode="aspectFill" bindtap="previewImage" data-url="{{item}}" />
+          <view class="image-delete" catchtap="deleteImage" data-index="{{index}}">×</view>
+        </view>
+        <view wx:if="{{form.image.length < 9}}" class="upload-placeholder" bindtap="onUploadImage">
+          <text class="upload-icon">+</text>
+          <text class="upload-text">上传图片</text>
+        </view>
+      </view>
+    </view>
+    <view class="divider"></view>
+
+    <!-- 备注 -->
+    <view class="form-row-col">
+      <text class="form-label">备注</text>
+      <textarea class="form-textarea" placeholder="请输入备注信息..." value="{{form.remark}}" bindinput="onInput" data-field="remark" adjust-position="{{true}}" />
+    </view>
+  </view>
+
+  <!-- ===== 提交按钮 ===== -->
+  <view class="submit-area">
+    <view class="btn-draft" bindtap="saveDraft">暂存草稿</view>
+    <view class="btn-submit" bindtap="submitForm">提交入库</view>
+  </view>
+
+  <view style="height: 60rpx;"></view>
+  <template is="approvalSelector" data="{{approvalSelector: approvalSelector}}" />
+</view>

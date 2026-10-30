@@ -1,0 +1,169 @@
+<!-- pages/contact/contact.wxml - 联系我们 -->
+<scroll-view scroll-y class="page-contact" show-scrollbar="{{false}}">
+
+  <!-- 顶部图 -->
+  <view class="contact-hero">
+    <image class="contact-hero-icon" src="/images/logo.jpg" mode="aspectFit" />
+    <text class="contact-hero-title">{{companyInfo.name}}</text>
+    <text class="contact-hero-sub">共识 共行 共赢</text>
+  </view>
+
+  <!-- 联系方式卡片 -->
+  <view class="contact-cards px -30 mt-24">
+    <view class="section-title">联系方式</view>
+
+    <!-- 电话 -->
+    <view class="contact-card card" bindtap="onCallTap">
+      <view class="cc-left">
+        <view class="cc-icon-wrap cc-phone">📞</view>
+        <view class="cc-info">
+          <text class="cc-label">客服电话</text>
+          <text class="cc-value">{{companyInfo.phone}}</text>
+        </view>
+      </view>
+      <view class="cc-actions">
+        <view class="cc-btn cc-btn-call" catchtap="onCallTap">拨打</view>
+        <view class="cc-btn cc-btn-copy" catchtap="onCopyPhone">复制</view>
+      </view>
+    </view>
+
+    <!-- 邮箱 -->
+    <view class="contact-card card">
+      <view class="cc-left">
+        <view class="cc-icon-wrap cc-email">📧</view>
+        <view class="cc-info">
+          <text class="cc-label">商务邮箱</text>
+          <text class="cc-value">{{companyInfo.email}}</text>
+        </view>
+      </view>
+      <view class="cc-actions">
+        <view class="cc-btn cc-btn-copy" bindtap="onCopyEmail">复制</view>
+      </view>
+    </view>
+
+    <!-- 工作时间 -->
+    <view class="contact-card card">
+      <view class="cc-left">
+        <view class="cc-icon-wrap cc-time">🕒</view>
+        <view class="cc-info">
+          <text class="cc-label">工作时间</text>
+          <text class="cc-value">{{companyInfo.workHours}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 微信 -->
+    <view class="contact-card card">
+      <view class="cc-left">
+        <view class="cc-icon-wrap cc-wechat">💬</view>
+        <view class="cc-info">
+          <text class="cc-label">微信公众号</text>
+          <text class="cc-value">{{companyInfo.wechat}}</text>
+        </view>
+      </view>
+      <view class="cc-actions">
+        <view class="cc-btn cc-btn-copy" bindtap="onCopyPhone">复制</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 地图 -->
+  <view class="map-section px-30 mt-24">
+    <view class="section-title">公司地址</view>
+    <view class="map-wrap card" bindtap="onMapTap">
+      <map
+        class="map"
+        latitude="{{companyInfo.latitude}}"
+        longitude="{{companyInfo.longitude}}"
+        scale="15"
+        show-location="{{true}}"
+      >
+        <cover-view class="map-marker">
+          <cover-view class="map-marker-dot"></cover-view>
+        </cover-view>
+      </map>
+      <view class="map-address">
+        <text class="map-addr-icon">📍</text>
+        <text class="map-addr-text">{{companyInfo.address}}</text>
+        <text class="map-nav-btn">导航 ›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 在线留言 -->
+  <view class="message-form px-30 mt-24">
+    <view class="section-title">在线留言</view>
+
+    <!-- 提交成功状态 -->
+    <view wx:if="{{submitted}}" class="submit-success card">
+      <text class="ss-icon">✅</text>
+      <text class="ss-title">留言提交成功</text>
+      <text class="ss-desc">我们会在1-2个工作日内与您联系</text>
+    </view>
+
+    <!-- 表单 -->
+    <view wx:else class="form-card card">
+      <view class="form-item">
+        <text class="form-label">您的姓名 <text class="form-required">*</text></text>
+        <input
+          class="form-input"
+          placeholder="请输入姓名"
+          placeholder-style="color:#cccccc"
+          bindinput="onFormInput"
+          data-field="name"
+          value="{{formData.name}}"
+        />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">联系电话 <text class="form-required">*</text></text>
+        <input
+          class="form-input"
+          placeholder="请输入手机号"
+          placeholder-style="color:#cccccc"
+          bindinput="onFormInput"
+          data-field="phone"
+          value="{{formData.phone}}"
+          maxlength="11"
+        />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">公司名称</text>
+        <input
+          class="form-input"
+          placeholder="请输入公司名称（选填）"
+          placeholder-style="color:#cccccc"
+          bindinput="onFormInput"
+          data-field="company"
+          value="{{formData.company}}"
+        />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">留言内容 <text class="form-required">*</text></text>
+        <textarea
+          class="form-textarea"
+          placeholder="请描述您的需求或问题..."
+          placeholder-style="color:#cccccc"
+          bindinput="onFormInput"
+          data-field="message"
+          value="{{formData.message}}"
+          maxlength="500"
+          auto-height="{{true}}"
+        />
+        <text class="form-count">{{formData.message.length}}/500</text>
+      </view>
+
+      <button
+        class="submit-btn {{submitting ? 'btn-disabled' : ''}}"
+        bindtap="onSubmit"
+        disabled="{{submitting}}"
+      >
+        {{submitting ? '提交中...' : '提交留言'}}
+      </button>
+    </view>
+  </view>
+
+  <view style="height: 60rpx;"></view>
+</scroll-view>

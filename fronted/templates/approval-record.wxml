@@ -1,0 +1,28 @@
+<template name="approvalTimeline">
+  <view class="approval-record-section" wx:if="{{timeline && timeline.length}}">
+    <view class="approval-record-header">
+      <view class="approval-record-title-dot"></view>
+      <text class="approval-record-title">审批流程记录</text>
+    </view>
+    <view class="approval-record-timeline">
+      <view class="approval-record-item" wx:for="{{timeline}}" wx:key="key">
+        <view class="approval-record-stage">
+          <text class="approval-record-status {{item.statusClass}}">{{item.statusText}}</text>
+          <view class="approval-record-dot {{item.statusClass}}">{{item.dotText}}</view>
+          <view wx:if="{{!item.isLast}}" class="approval-record-line"></view>
+        </view>
+        <view class="approval-record-card">
+          <view class="approval-record-user-row">
+            <view class="approval-record-avatar {{item.statusClass}}">{{item.avatar}}</view>
+            <view class="approval-record-main">
+              <text class="approval-record-name">{{item.title}}</text>
+              <text class="approval-record-type">{{item.stage}} · {{item.subtitle}}</text>
+            </view>
+          </view>
+          <text wx:if="{{item.remark}}" class="approval-record-remark">{{item.remark}}</text>
+          <text wx:if="{{item.time}}" class="approval-record-time">{{item.time}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>

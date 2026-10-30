@@ -1,0 +1,235 @@
+/* pages/cost-calc-record/cost-calc-record.wxss */
+
+/* 筛选栏 */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 24rpx;
+  background: #fff;
+  border-bottom: 1rpx solid #eee;
+}
+
+.filter-pill {
+  display: flex;
+  align-items: center;
+  height: 56rpx;
+  padding: 0 20rpx;
+  background: #f0f0f0;
+  border-radius: 28rpx;
+  font-size: 26rpx;
+  color: #666;
+  margin-right: 16rpx;
+}
+
+.filter-pill.active {
+  background: #e6f3ff;
+  color: #1a6fc4;
+}
+
+.filter-pill .arrow {
+  font-size: 20rpx;
+  margin-left: 8rpx;
+}
+
+.filter-pill.reset {
+  color: #999;
+  font-size: 24rpx;
+}
+
+/* 统计栏 */
+.stat-bar {
+  padding: 16rpx 24rpx;
+  background: #fafafa;
+}
+
+.stat-text {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 记录列表 */
+.record-list {
+  box-sizing: border-box;
+  height: calc(100vh - 220rpx);
+  padding: 16rpx 24rpx;
+}
+
+/* 卡片 */
+.record-card {
+  box-sizing: border-box;
+  max-width: 100%;
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.card-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.card-meta {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-left: 12rpx;
+}
+
+.status-tag {
+  font-size: 22rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 20rpx;
+  flex-shrink: 0;
+}
+
+.status-tag.pending {
+  background: #fff7e6;
+  color: #e67e22;
+}
+
+.status-tag.approved {
+  background: #e8f8f0;
+  color: #27ae60;
+}
+
+.status-tag.rejected {
+  background: #fef0f0;
+  color: #e74c3c;
+}
+
+/* 价格变动标签 */
+.price-change-tag {
+  font-size: 22rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 20rpx;
+}
+
+.price-change-tag.up {
+  background: #fff1e6;
+  color: #e67e22;
+}
+
+.price-change-tag.down {
+  background: #e8f8f0;
+  color: #27ae60;
+}
+
+.price-change-tag.flat {
+  background: #f0f0f0;
+  color: #999;
+}
+
+/* 行 */
+.card-row {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10rpx 0;
+}
+
+.card-row-reason {
+  align-items: flex-start;
+}
+
+.row-label {
+  font-size: 26rpx;
+  color: #999;
+  width: 160rpx;
+  flex-shrink: 0;
+}
+
+.row-value {
+  min-width: 0;
+  max-width: 420rpx;
+  padding-right: 6rpx;
+  box-sizing: border-box;
+  font-size: 28rpx;
+  color: #333;
+  text-align: right;
+  flex: 1;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
+.row-value.reason {
+  text-align: left;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* 价格区间 */
+.price-wrap {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.price-old {
+  font-size: 26rpx;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.price-arrow {
+  font-size: 26rpx;
+  color: #ccc;
+  margin: 0 10rpx;
+}
+
+.price-new {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1a6fc4;
+}
+
+.price-unit {
+  font-size: 22rpx;
+  color: #999;
+  margin-left: 6rpx;
+}
+
+/* 空状态 */
+.empty {
+  text-align: center;
+  padding: 120rpx 0;
+  color: #ccc;
+  font-size: 28rpx;
+}
+
+/* 加载提示 */
+.loading-tip {
+  text-align: center;
+  padding: 30rpx 0;
+  color: #ccc;
+  font-size: 24rpx;
+}
+
+.record-actions {
+  padding-top: 18rpx;
+}
+
+.edit-btn {
+  width: 100%;
+  height: 72rpx;
+  line-height: 72rpx;
+  border-radius: 14rpx;
+  background: #e7f3ff;
+  color: #1a6fc4;
+  font-size: 26rpx;
+  font-weight: 700;
+}

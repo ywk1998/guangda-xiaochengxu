@@ -1,0 +1,71 @@
+<!-- pages/my-forms/my-forms.wxml - 我的表单 -->
+<view class="page">
+  <!-- 表单类型下拉选择 -->
+  <view class="filter-bar">
+    <picker mode="selector" range="{{tabs}}" range-key="label" bindchange="onTabChange">
+      <view class="filter-pill active">
+        {{activeTabLabel}}
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- 统计 -->
+  <view class="stat-bar">
+    <text class="stat-text">共 {{totalCount}} 条记录</text>
+  </view>
+
+  <!-- 记录列表 -->
+  <scroll-view scroll-y class="record-list" bindscrolltolower="loadMore" lower-threshold="100">
+    <block wx:for="{{recordList}}" wx:key="_id">
+      <view class="record-card" bindtap="goToDetail" data-id="{{item._id}}" data-type="{{activeTab}}">
+        <!-- 卡片头部 -->
+        <view class="card-header">
+          <text class="card-title">{{item.title || item.projectName || item.projectLocation || '记录'}}</text>
+          <view wx:if="{{item.status}}" class="status-tag {{item.statusClass}}">{{item.statusLabel}}</view>
+        </view>
+
+        <!-- 关键信息行 -->
+        <view class="card-row" wx:if="{{item.date}}">
+          <text class="row-label">日期</text>
+          <text class="row-value">{{item.date}}</text>
+        </view>
+        <view class="card-row" wx:if="{{item.station}}">
+          <text class="row-label">拌站点</text>
+          <text class="row-value">{{item.station}}</text>
+        </view>
+        <view class="card-row" wx:if="{{item.totalVolume !== undefined}}">
+          <text class="row-label">总加油量</text>
+          <text class="row-value highlight">{{item.totalVolume}} 升</text>
+        </view>
+        <view class="card-row" wx:if="{{item.totalAmount !== undefined}}">
+          <text class="row-label">总金额</text>
+          <text class="row-value highlight">¥{{item.totalAmount}}</text>
+        </view>
+        <view class="card-row" wx:if="{{item.totalOutput !== undefined}}">
+          <text class="row-label">总产量</text>
+          <text class="row-value highlight">{{item.totalOutput}} 吨</text>
+        </view>
+        <view class="card-row" wx:if="{{item.approvalStatus === 'rejected' && item.approvalRemark}}">
+          <text class="row-label">拒绝原因</text>
+          <text class="row-value">{{item.approvalRemark}}</text>
+        </view>
+
+        <!-- 提交时间 -->
+        <view class="card-row card-row-time">
+          <text class="row-label">提交时间</text>
+          <text class="row-value time">{{item.submitTimeStr}}</text>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view wx:if="{{!loading && recordList.length === 0}}" class="empty">
+      <text>暂无记录</text>
+    </view>
+
+    <!-- 加载更多 -->
+    <view wx:if="{{loading}}" class="loading-tip">加载中...</view>
+    <view wx:if="{{noMore && recordList.length > 0}}" class="loading-tip">— 已加载全部 —</view>
+  </scroll-view>
+</view>

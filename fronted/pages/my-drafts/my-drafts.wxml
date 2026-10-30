@@ -1,0 +1,77 @@
+<!-- pages/my-drafts/my-drafts.wxml - 我的草稿箱 -->
+<view class="page">
+  <!-- 表单类型下拉选择 -->
+  <view class="filter-bar">
+    <picker mode="selector" range="{{tabs}}" range-key="label" bindchange="onTabChange">
+      <view class="filter-pill active">
+        {{activeTabLabel}}
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- 统计 -->
+  <view class="stat-bar">
+    <text class="stat-text">{{draft ? '1 条草稿' : '暂无草稿'}}</text>
+  </view>
+
+  <!-- 草稿卡片 -->
+  <scroll-view scroll-y class="draft-container">
+    <block wx:if="{{draft}}">
+      <view class="draft-card">
+        <!-- 卡片头部 -->
+        <view class="card-header">
+          <text class="card-title">{{draftTitle}}</text>
+          <view class="draft-tag">草稿</view>
+        </view>
+
+        <!-- 关键信息 -->
+        <view class="card-row" wx:if="{{draft.date}}">
+          <text class="row-label">日期</text>
+          <text class="row-value">{{draft.date}}</text>
+        </view>
+        <view class="card-row" wx:if="{{draft.station}}">
+          <text class="row-label">拌站点</text>
+          <text class="row-value">{{draft.station}}</text>
+        </view>
+        <view class="card-row" wx:if="{{draft.projectName}}">
+          <text class="row-label">项目名称</text>
+          <text class="row-value">{{draft.projectName}}</text>
+        </view>
+        <view class="card-row" wx:if="{{draft.projectLocation}}">
+          <text class="row-label">项目地点</text>
+          <text class="row-value">{{draft.projectLocation}}</text>
+        </view>
+        <view class="card-row" wx:if="{{draft.totalVolume}}">
+          <text class="row-label">总加油量</text>
+          <text class="row-value highlight">{{draft.totalVolume}} 升</text>
+        </view>
+        <view class="card-row" wx:if="{{draft.totalAmount}}">
+          <text class="row-label">总金额</text>
+          <text class="row-value highlight">¥{{draft.totalAmount}}</text>
+        </view>
+        <view class="card-row" wx:if="{{draft.equipmentList && draft.equipmentList.length}}">
+          <text class="row-label">设备数量</text>
+          <text class="row-value">{{draft.equipmentList.length}} 台</text>
+        </view>
+
+        <!-- 保存时间 -->
+        <view class="card-row card-row-time" wx:if="{{draft.saveTimeStr}}">
+          <text class="row-label">保存时间</text>
+          <text class="row-value time">{{draft.saveTimeStr}}</text>
+        </view>
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="action-bar">
+        <view class="btn-delete" bindtap="onDeleteDraft">删除草稿</view>
+        <view class="btn-continue" bindtap="onContinueEdit">继续编辑</view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view wx:if="{{!draft}}" class="empty">
+      <text>暂无草稿</text>
+    </view>
+  </scroll-view>
+</view>
